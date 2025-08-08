@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daftar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link rel="icon" href="{{ url_for('static', filename='assets/imgs/logo.ico') }}" type="image/x-icon"/>
+  <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .floating-shapes {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .floating-shapes div {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .shape-1 { width: 80px; height: 80px; top: 10%; left: 10%; animation-delay: 0s; }
+        .shape-2 { width: 120px; height: 120px; top: 70%; right: 10%; animation-delay: 2s; }
+        .shape-3 { width: 60px; height: 60px; top: 40%; left: 80%; animation-delay: 4s; }
+        .shape-4 { width: 100px; height: 100px; top: 20%; right: 30%; animation-delay: 1s; }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            transform: translateY(-1.5rem) scale(0.8);
+            color: #667eea;
+        }
+        
+        .input-group label {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            color: #9ca3af;
+            pointer-events: none;
+            transition: all 0.2s ease-in-out;
+            background: white;
+            padding: 0 0.5rem;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen gradient-bg flex items-center justify-center p-4 relative">
+  <div class="w-full max-w-4xl mx-auto relative z-10">
+    <div class="glass-effect rounded-3xl shadow-2xl overflow-hidden backdrop-blur-xl">
+      <div class="flex flex-col lg:flex-row min-h-[600px]">
+
+        <!-- Side Panel -->
+        <div class="lg:w-1/2 bg-gradient-to-br from-purple-600 to-blue-600 p-8 lg:p-12 flex flex-col justify-center items-center text-white relative overflow-hidden">
+                    <div class="absolute inset-0 bg-black opacity-10"></div>
+                    <div class="relative z-10 text-center" data-aos="fade-right" data-aos-duration="1000">
+                        <div class="mb-8">
+                            <img src="{{ url_for('static', filename='assets/imgs/logo.png') }}" alt="Logo" class="w-24 h-24 mb-4 mx-auto">
+                            <h1 class="text-4xl lg:text-5xl font-bold mb-4 text-justify">Selamat Datang!</h1>
+                            <p class="text-xl opacity-90 text-justify">Bergabunglah dengan platform terdepan untuk pengalaman digital yang luar biasa</p>
+                        </div>
+                        
+                        <div class="space-y-4 text-left max-w-sm">
+                            <div class="flex items-center space-x-3" data-aos="fade-right" data-aos-delay="200">
+                                <i class="fas fa-check-circle text-green-300"></i>
+                                <span>Keamanan tingkat enterprise</span>
+                            </div>
+                            <div class="flex items-center space-x-3" data-aos="fade-right" data-aos-delay="400">
+                                <i class="fas fa-check-circle text-green-300"></i>
+                                <span>Akses ke fitur eksklusif</span>
+                            </div>
+                            <div class="flex items-center space-x-3" data-aos="fade-right" data-aos-delay="600">
+                                <i class="fas fa-check-circle text-green-300"></i>
+                                <span>Support 24/7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        <!-- Signup Form -->
+        <div class="lg:w-1/2 bg-white p-8 lg:p-12">
+          <div class="max-w-md mx-auto space-y-6">
+            <div>
+              <h2 class="text-3xl font-bold text-gray-800 mb-2">Buat Akun Baru</h2>
+              <p class="text-gray-600">Isi data di bawah untuk mendaftar.</p>
+            </div>
+
+            <form class="space-y-6">
+                 <div class="input-group">
+                    <input type="email" id="email-input" name="email" placeholder=" " class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition" required />
+                    <label for="email-input">Email</label>
+                    <div id="email-error-message" class="text-red-500 text-sm mt-1"></div>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password-input" name="password" placeholder=" " class="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition" required />
+                    <label for="password-input">Password</label>
+                    <div id="password-error-message" class="text-red-500 text-sm mt-1"></div>
+                </div>
+
+                <div id="create-account-btn" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 rounded-xl font-semibold text-center hover:from-purple-700 hover:to-blue-700 transform hover:scale-105 transition shadow-lg cursor-pointer">
+                    <i class="fas fa-user-plus mr-2"></i> Buat Akun
+                </div>
+
+            <div class="text-center">
+                    <span class="text-gray-600">atau buat akun dengan</span>
+                </div>
+
+             <button type="button" id="sign-in-with-google-btn" class="flex w-full items-center justify-center py-3 border-2 border-gray-200 rounded-xl hover:border-gray-300 transition-colors duration-300 group">
+                    <i class="fab fa-google text-red-500 group-hover:scale-110 transition-transform mr-2"></i> Masuk dengan Google </button>
+                <div id="google-signin-error-message" class="text-sm text-red-500 mt-1"></div>
+              <div class="text-center">
+                <span class="text-gray-600">
+                  Sudah punya akun?
+                  <a href="{{ url_for('login') }}" class="text-purple-600 hover:text-purple-800">Masuk</a>
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+      // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+
+        // Form Toggle Logic
+        const loginBtn = document.getElementById('loginBtn');
+        const signupBtn = document.getElementById('signupBtn');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+
+        loginBtn.addEventListener('click', () => {
+            loginBtn.classList.add('bg-white', 'text-purple-600', 'shadow-md');
+            loginBtn.classList.remove('text-gray-600');
+            signupBtn.classList.remove('bg-white', 'text-purple-600', 'shadow-md');
+            signupBtn.classList.add('text-gray-600');
+            
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+        });
+
+        signupBtn.addEventListener('click', () => {
+            signupBtn.classList.add('bg-white', 'text-purple-600', 'shadow-md');
+            signupBtn.classList.remove('text-gray-600');
+            loginBtn.classList.remove('bg-white', 'text-purple-600', 'shadow-md');
+            loginBtn.classList.add('text-gray-600');
+            
+            signupForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        });
+  </script>
+   <script src="{{ url_for('static', filename='assets/js/login-auth.js') }}" type="module"></script>
+</body>
+</html>

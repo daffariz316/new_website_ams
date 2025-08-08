@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" href="{{ url_for('static', filename='assets/imgs/logo.ico') }}" type="image/x-icon"/>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E293B',
+                        accent: '#F59E0B'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed left-0 top-0 w-64 h-full bg-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8" data-aos="fade-down">
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                    <img src="{{ url_for('static', filename='assets/imgs/logo.png') }}" alt="Logo" class="w-6 h-6 object-contain">
+                </div>
+                <h1 class="text-xl font-bold">AdminPanel</h1>
+            </div>
+            
+             <nav class="space-y-2">
+                <a href="{{ url_for('dashboard') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="100">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('portfolio') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="200">
+                    <i class="fas fa-folder"></i>
+                    <span>Portfolio</span>
+                </a>
+                <a href="{{ url_for('manage_provinces') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="200">
+                    <i class="fas fa-map"></i>
+                    <span>Provinsi</span>
+                </a>
+                <a href="{{ url_for('manage_regions') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="200">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Region</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Overlay untuk mobile -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="flex items-center justify-between p-4">
+                <div class="flex items-center space-x-4">
+                    <button id="sidebarToggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-bars text-gray-600"></i>
+                    </button>
+                    <h2 class="text-2xl font-bold text-gray-800" data-aos="fade-down">Portfolio Dashboard</h2>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative hidden md:block" data-aos="fade-down" data-aos-delay="100">
+                        <input type="text" placeholder="Cari..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-primary">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <!-- <div class="flex items-center space-x-3" data-aos="fade-down" data-aos-delay="300">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile" class="w-8 h-8 rounded-full">
+                        <span class="hidden md:block text-gray-700 font-medium">John Doe</span>
+                        <i class="fas fa-chevron-down text-gray-400"></i>
+                    </div> -->
+                   <!-- Container -->
+                <div class="relative" x-data="{ open: false }" data-aos="fade-down" data-aos-delay="300">
+                <!-- Trigger -->
+                <div class="flex items-center space-x-3 cursor-pointer" @click="open = !open">
+                    <img  src="{{ url_for('static', filename='assets/imgs/profile-picture.png') }}" alt="Profile" class="w-8 h-8 rounded-full object-cover">
+                    <span class="hidden md:block text-gray-700 font-medium">
+                    {{ user.name }}
+                    </span>
+                    <i class="fas fa-chevron-down text-gray-400"></i>
+                </div>
+
+                <!-- Dropdown -->
+                <div x-show="open"  @click.away="open = false" x-transition class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50">
+                    <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                    Sign Out
+                    </a>
+                </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+         <main class="p-6 max-w-7xl mx-auto">
+            <div class="mb-6" data-aos="fade-right">
+                <nav class="flex" aria-label="Breadcrumb">
+                    <ol class="flex items-center space-x-2">
+                        <li><a href="{{ url_for('dashboard') }}" class="text-gray-500 hover:text-primary">Dashboard</a></li>
+                        <li><i class="fas fa-chevron-right text-gray-300 text-sm"></i></li>
+                        <li><a href="{{ url_for('manage_provinces') }}" class="text-gray-500 hover:text-primary">Provinsi</a></li>
+                        <li><i class="fas fa-chevron-right text-gray-300 text-sm"></i></li>
+                        <li><span class="text-gray-800 font-medium">Update Provinsi</span></li>
+                    </ol>
+                </nav>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" id="provinceForm" class="p-8 space-y-6">
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Left Column -->
+                    <div class="space-y-6">
+                        <!-- Project Title -->
+                        <div class="space-y-2" data-aos="fade-right" data-aos-delay="300">
+                            <label for="name" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
+                                <i class="fas fa-project-diagram mr-2 text-blue-500"></i>
+                                Nama Provinsi
+                            </label>
+                            <input 
+                                type="text" 
+                                name="name" 
+                                id="name"
+                                value="{{ province.name }}"
+                                required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring focus:ring-blue-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
+                                placeholder="Enter your project title"
+                            >
+                        </div>
+                        
+                        <!-- Project Logo -->
+                        <div class="space-y-2" data-aos="fade-right" data-aos-delay="400">
+                            <label for="logo" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
+                                <i class="fas fa-image mr-2 text-yellow-500"></i>
+                                Logo
+                            </label>
+                            {% if province.logo %}
+                                        <img src="{{ url_for('static', filename=province.logo) }}" alt="Logo" class="w-20 mb-2">
+                            {% endif %}
+                            <input 
+                                type="file" 
+                                name="logo" 
+                                id="logo"
+                                accept="image/*"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:ring focus:ring-yellow-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons - Horizontal Layout -->
+                <div class="flex gap-4 pt-6 border-t border-gray-200" data-aos="fade-up" data-aos-delay="700">
+                    <button 
+                        type="submit" 
+                        class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 active:scale-[0.98]"
+                    >
+                        <i class="fas fa-save mr-2"></i>
+                        Update Project
+                    </button>
+                    
+                    <button 
+                        type="reset"
+                        class="flex-1 border-2 border-gray-300 text-gray-700 font-bold py-4 px-8 rounded-xl hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-gray-200 active:scale-[0.98]"
+                    >
+                        <i class="fas fa-redo mr-2"></i>
+                        Reset Form
+                    </button>
+                    
+                    <button 
+                        type="button"
+                        onclick="window.history.back()"
+                        class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-gray-300 active:scale-[0.98]"
+                    >
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to List
+                    </button>
+                </div>
+            </form>
+         </main>
+
+    </div>
+
+    <!-- Pastikan Alpine.js di-load -->
+<script src="//unpkg.com/alpinejs" defer></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Sidebar toggle
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        });
+
+        // Auto-close sidebar on resize if screen becomes large
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.add('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+
+        // Add hover effects to table rows
+        const tableRows = document.querySelectorAll('tbody tr');
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.transform = 'scale(1.01)';
+                row.style.transition = 'transform 0.2s ease-in-out';
+            });
+            
+            row.addEventListener('mouseleave', () => {
+                row.style.transform = 'scale(1)';
+            });
+        });
+
+        // Handler dengan SweetAlert2 untuk #projectForm
+  document.getElementById('provinceForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Tampilkan loading SweetAlert
+    Swal.fire({
+      title: 'Updating Project...',
+      html: 'Please wait while we save your changes',
+      icon: 'info',
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      willOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Simulasi delay (ganti dengan request async kalau mau)
+    setTimeout(() => {
+      Swal.fire({
+        title: 'Success!',
+        text: 'Your project has been updated successfully',
+        icon: 'success',
+        confirmButtonText: 'Great!',
+        confirmButtonColor: '#3B82F6',
+        timer: 3000,
+        timerProgressBar: true
+      }).then(() => {
+        // Setelah SweetAlert success, submit form secara normal
+        this.submit();
+      });
+    }, 2000);
+  });
+  // File input enhancement
+        document.getElementById('video_file').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const fileSize = (file.size / 1024 / 1024).toFixed(2); // MB
+                if (fileSize > 100) {
+                    Swal.fire({
+                        title: 'File Too Large',
+                        text: `File size is ${fileSize}MB. Please choose a file smaller than 100MB.`,
+                        icon: 'warning',
+                        confirmButtonColor: '#EF4444'
+                    });
+                    e.target.value = '';
+                } else {
+                    Swal.fire({
+                        title: 'File Selected',
+                        text: `${file.name} (${fileSize}MB)`,
+                        icon: 'success',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                }
+            }
+        });
+    </script>
+
+    <style>
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple 0.3s linear;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+    </style>
+</body>
+</html>

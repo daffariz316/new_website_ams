@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PT Ahsani Mitra Solusindo</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind Plugin Aspect Ratio -->
+  <script>
+    tailwind.config = {
+      plugins: [tailwindcssAspectRatio],
+    }
+  </script>
+  <!-- AOS Animation & Themify Icons -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="icon" href="{{ url_for('static', filename='assets/imgs/logo.ico') }}" type="image/x-icon"/>
+  <style>
+        /* Custom CSS untuk animasi hamburger ke X */
+        .hamburger-line {
+            transform-origin: center;
+        }
+        
+        .menu-open .hamburger-line:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        
+        .menu-open .hamburger-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-open .hamburger-line:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+        /* @keyframes pulse-ring {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2.4);
+                opacity: 0;
+            }
+        } */
+        
+        /* @keyframes sound-wave {
+            0%, 100% {
+                transform: scaleY(1);
+            }
+            50% {
+                transform: scaleY(1.5);
+            }
+        } */
+        
+        /* .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        } */
+        
+        .sound-wave {
+            animation: sound-wave 1s ease-in-out infinite;
+        }
+        
+        .sound-wave:nth-child(1) { animation-delay: 0s; }
+        .sound-wave:nth-child(2) { animation-delay: 0.1s; }
+        .sound-wave:nth-child(3) { animation-delay: 0.2s; }
+        .sound-wave:nth-child(4) { animation-delay: 0.3s; }
+        /* Custom animations */
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.1;
+            }
+            100% {
+                transform: scale(1.4);
+                opacity: 0;
+            }
+        }
+        
+        .pulse-ring {
+            animation: pulse-ring 2s infinite;
+        }
+        
+        @keyframes sound-wave {
+            0%, 100% {
+                transform: scaleY(1);
+            }
+            50% {
+                transform: scaleY(1.5);
+            }
+        }
+        
+        .sound-wave:nth-child(1) {
+            animation: sound-wave 1s ease-in-out infinite;
+            animation-delay: 0s;
+        }
+        
+        .sound-wave:nth-child(2) {
+            animation: sound-wave 1s ease-in-out infinite;
+            animation-delay: 0.1s;
+        }
+        
+        .sound-wave:nth-child(3) {
+            animation: sound-wave 1s ease-in-out infinite;
+            animation-delay: 0.2s;
+        }
+        
+        .sound-wave:nth-child(4) {
+            animation: sound-wave 1s ease-in-out infinite;
+            animation-delay: 0.3s;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
+            .sound-button {
+                width: 3.5rem;
+                height: 3.5rem;
+                bottom: 1.5rem;
+                right: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .sound-button {
+                width: 3rem;
+                height: 3rem;
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+        
+        /* Floating animation */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .popup-overlay {
+            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .popup-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .popup-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .popup-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .popup-content::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        .popup-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+    </style>
+</head>
+
+<body class="bg-white text-gray-800">
+  <!-- BackSound Audio -->
+<audio id="background-music" src="{{ url_for('static', filename='assets/audio/download.wav') }}" autoplay loop></audio>
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-lg transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+      <!-- Logo -->
+      <div class="flex items-center space-x-2">
+        <img src="{{ url_for('static', filename='assets/imgs/logo.png') }}" alt="Logo PT AMS" class="h-10 w-10 object-contain">
+        <span class="text-2xl font-bold bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
+          PT Ahsani Mitra Solusindo
+        </span>
+      </div>
+
+      <!-- Desktop Nav -->
+      <div class="hidden md:flex space-x-6">
+        <a href="#home" class="hover:text-red-600 transition-colors">Home</a>
+        <a href="#services" class="hover:text-red-600 transition-colors">Services</a>
+        <a href="#about" class="hover:text-red-600 transition-colors">About</a>
+        <a href="#portfolio" class="hover:text-red-600 transition-colors">Portfolio</a>
+        <a href="#contact" class="hover:text-red-600 transition-colors">Contact</a>
+      </div>
+
+      <!-- Di Navbar -->
+    <!-- <div class="flex items-center space-x-2">
+    <button onclick="setLanguage('id')" class="px-2 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded">ID</button>
+    <button onclick="setLanguage('en')" class="px-2 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded">EN</button>
+    </div> -->
+    <div class="hidden md:flex items-center space-x-2">
+    <button
+        onclick="setLanguage('id')"
+        class="flex items-center gap-1 px-3 py-1.5 text-sm font-semibold text-white bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 transition-all rounded-full shadow-md">
+        🇮🇩 <span>ID</span>
+    </button>
+    <button
+        onclick="setLanguage('en')"
+        class="flex items-center gap-1 px-3 py-1.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all rounded-full shadow-md"
+    >
+        🇺🇸 <span>EN</span>
+    </button>
+</div>
+
+
+      <!-- Hamburger Button
+      <button id="menu-btn" class="md:hidden flex flex-col space-y-1">
+        <span class="block w-6 h-0.5 bg-gray-800"></span>
+        <span class="block w-6 h-0.5 bg-gray-800"></span>
+        <span class="block w-6 h-0.5 bg-gray-800"></span>
+      </button> -->
+      <!-- Hamburger Button -->
+        <button id="menu-btn" class="md:hidden flex flex-col space-y-1.5 p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded">
+            <span class="hamburger-line block w-6 h-0.5 bg-gray-800 transition-all duration-300 ease-in-out"></span>
+            <span class="hamburger-line block w-6 h-0.5 bg-gray-800 transition-all duration-300 ease-in-out"></span>
+            <span class="hamburger-line block w-6 h-0.5 bg-gray-800 transition-all duration-300 ease-in-out"></span>
+        </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <!-- <div id="mobile-menu" class="hidden flex-col space-y-4 px-4 pb-4 md:hidden bg-white/90 backdrop-blur-md shadow-md">
+      <a href="#home" class="block hover:text-red-600 transition-colors">Home</a>
+      <a href="#services" class="block hover:text-red-600 transition-colors">Services</a>
+      <a href="#about" class="block hover:text-red-600 transition-colors">About</a>
+      <a href="#portfolio" class="block hover:text-red-600 transition-colors">Portfolio</a>
+      <a href="#contact" class="block hover:text-red-600 transition-colors">Contact</a>
+    </div> -->
+     <!-- Menu yang akan muncul/hilang -->
+        <!-- <div id="mobile-menu" class="hidden mt-4 p-4 bg-gray-50 rounded-lg">
+            <nav class="flex flex-col space-y-2">
+            <a href="#home" class="text-gray-700 hover:text-blue-600 py-2">Home</a>
+            <a href="#services" class="text-gray-700 hover:text-blue-600 py-2">Services</a>
+            <a href="#about" class="text-gray-700 hover:text-blue-600 py-2">About</a>
+            <a href="#portfolio" class="text-gray-700 hover:text-blue-600 py-2">Portfolio</a>
+            <a href="#contact" class="text-gray-700 hover:text-blue-600 py-2">Contact</a>
+            </nav>
+        </div> -->
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden mt-4 p-4 bg-gray-50 rounded-lg md:hidden">
+        <nav class="flex flex-col space-y-2">
+            <a href="#home" class="text-gray-700 hover:text-blue-600 py-2">Home</a>
+            <a href="#services" class="text-gray-700 hover:text-blue-600 py-2">Services</a>
+            <a href="#about" class="text-gray-700 hover:text-blue-600 py-2">About</a>
+            <a href="#portfolio" class="text-gray-700 hover:text-blue-600 py-2">Portfolio</a>
+            <a href="#contact" class="text-gray-700 hover:text-blue-600 py-2">Contact</a>
+        </nav>
+        
+        <!-- Toggle Language - Mobile -->
+        <div class="flex items-center justify-center gap-2 mt-4">
+            <button
+            onclick="setLanguage('id')"
+            class="flex items-center gap-1 px-3 py-1.5 text-sm font-semibold text-white bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 transition-all rounded-full shadow-md"
+            >
+            🇮🇩 <span>ID</span>
+            </button>
+            <button
+            onclick="setLanguage('en')"
+            class="flex items-center gap-1 px-3 py-1.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all rounded-full shadow-md"
+            >
+            🇺🇸 <span>EN</span>
+            </button>
+        </div>
+        </div>
+
+  </nav>
+
+ <!-- Hero Section -->
+  <section class="relative bg-gray-900 text-white min-h-screen flex items-center justify-center overflow-hidden">
+    <video autoplay muted loop class="absolute inset-0 w-full h-full object-cover opacity-40">
+      <source src="your-video.mp4" type="video/mp4">
+    </video>
+    <div class="z-10 text-center container mx-auto px-4" data-aos="fade-up">
+      <h1 data-i18n="hero_title" class="text-3xl sm:text-4xl md:text-6xl font-bold mb-4">Empowering Businesses with Scalable Digital Solutions</h1>
+      <p data-i18n="hero_subtitle" class="text-base sm:text-lg md:text-xl mb-6">Kami bantu bisnis Anda tumbuh dengan layanan teknologi terbaik.</p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#contact" class="bg-red-600 hover:bg-red-700 px-6 py-3 rounded text-white font-semibold">Get Free Consultation</a>
+        <a href="#portfolio" class="border border-white px-6 py-3 rounded font-semibold">View Portfolio</a>
+      </div>
+    </div>
+  </section>
+    <!-- Sambutan Section -->
+    <section id="kalimat-sambutan" class="py-16 px-4 max-w-6xl mx-auto">
+  <div class="bg-white rounded-xl shadow-lg p-8 md:p-12">
+    <div data-aos="fade-up" data-aos-duration="800">
+      <h2 class="text-4xl font-bold mb-8 text-gray-800 text-center">
+        <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent" data-i18n="sambutan_title">
+          Sambutan
+        </span>
+      </h2>
+    </div>
+
+    <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="800">
+      <p class="text-lg leading-relaxed text-justify text-gray-700 mb-6">
+        <span data-i18n="sambutan_paragraph1">
+          Selamat datang di
+        </span>
+        <span class="font-semibold text-blue-600">PT Ahsani Mitra Solusindo</span>.
+        <span data-i18n="sambutan_paragraph1_cont">
+          Kami adalah perusahaan yang bergerak di bidang pengembangan perangkat lunak, khususnya sistem
+        </span>
+        <em class="text-purple-600 font-medium">Enterprise Resource Planning</em> (ERP) —
+        <span data-i18n="sambutan_paragraph1_end">
+          sebuah sistem terpadu yang membantu dunia usaha meningkatkan efisiensi dan produktivitas.
+        </span>
+      </p>
+    </div>
+
+    <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="800">
+      <p class="text-lg text-justify leading-relaxed text-gray-700">
+        <span data-i18n="sambutan_paragraph2">
+          Didukung oleh tim ahli di bidang teknologi open source seperti
+        </span>
+        <span class="font-semibold text-green-600">Linux</span>,
+        <span class="font-semibold text-yellow-600">Python</span>,
+        <span data-i18n="sambutan_paragraph2_mid">
+          dan
+        </span>
+        <span class="font-semibold text-blue-600">PostgreSQL</span>,
+        <span data-i18n="sambutan_paragraph2_end">
+          kami berkomitmen menghadirkan solusi fleksibel yang dapat berjalan di berbagai sistem operasi, mulai dari Linux, Windows, hingga Mac OS.
+        </span>
+      </p>
+    </div>
+  </div>
+    </section>
+
+
+    <!-- Visi Misi Section -->
+    <section id="visi-misi" class="py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
+            <!-- Visi Card -->
+            <div data-aos="fade-right" data-aos-duration="800"
+                class="bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 sm:p-8 lg:p-10 w-full transform hover:scale-105">
+                <div class="mb-4 sm:mb-6 lg:mb-8">
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+                        <svg class="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-800 mb-2 sm:mb-4" data-i18n="visi_title">Visi</h2>
+                </div>
+                <p class="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-700 leading-relaxed text-justify" data-i18n="visi_text">
+                    Menjadi konsultan terdepan di bidang Teknologi Informasi (IT) untuk Keuangan, Manajemen, SDM,
+                    Pelatihan, dan Keterampilan dengan selalu menghadirkan solusi inovatif demi kepuasan setiap mitra.
+                </p>
+            </div>
+
+            <!-- Misi Card -->
+            <div data-aos="fade-left" data-aos-duration="800"
+                class="bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 p-6 sm:p-8 lg:p-10 w-full transform hover:scale-105">
+                <div class="mb-4 sm:mb-6 lg:mb-8">
+                    <div class="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-green-500 to-teal-600 rounded-full flex items-center justify-center mb-4 sm:mb-6 shadow-lg">
+                        <svg class="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-bold text-gray-800 mb-2 sm:mb-4"data-i18n="misi_title">Misi</h2>
+                </div>
+                <p class="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-700 leading-relaxed mb-4 sm:mb-6 lg:mb-8 text-justify" data-i18n="misi_intro">
+                    Memberikan layanan terbaik di bidang Teknologi Informasi (IT), Keuangan, Manajemen, SDM,
+                    Pelatihan, dan Keterampilan dengan nilai tambah yang nyata melalui prinsip-prinsip:
+                </p>
+                <div class="space-y-3 sm:space-y-4">
+                    <div data-aos="fade-up" data-aos-delay="100" data-aos-duration="600"
+                        class="flex items-start space-x-3 sm:space-x-4 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 bg-blue-500 rounded-full mt-2 sm:mt-2.5 lg:mt-3 flex-shrink-0"></div>
+                        <p class="text-gray-700 text-sm sm:text-base lg:text-lg" data-i18n="misi_1">Kemitraan yang saling menguntungkan</p>
+                    </div>
+                    <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="600"
+                        class="flex items-start space-x-3 sm:space-x-4 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 bg-green-500 rounded-full mt-2 sm:mt-2.5 lg:mt-3 flex-shrink-0"></div>
+                        <p class="text-gray-700 text-sm sm:text-base lg:text-lg" data-i18n="misi_2">Solusi yang efektif dan efisien</p>
+                    </div>
+                    <div data-aos="fade-up" data-aos-delay="300" data-aos-duration="600"
+                        class="flex items-start space-x-3 sm:space-x-4 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 bg-purple-500 rounded-full mt-2 sm:mt-2.5 lg:mt-3 flex-shrink-0"></div>
+                        <p class="text-gray-700 text-sm sm:text-base lg:text-lg" data-i18n="misi_3">Inovasi berkelanjutan</p>
+                    </div>
+                    <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="600"
+                        class="flex items-start space-x-3 sm:space-x-4 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 bg-yellow-500 rounded-full mt-2 sm:mt-2.5 lg:mt-3 flex-shrink-0"></div>
+                        <p class="text-gray-700 text-sm sm:text-base lg:text-lg" data-i18n="misi_4">Kualitas dan profesionalitas kerja yang tinggi</p>
+                    </div>
+                    <div data-aos="fade-up" data-aos-delay="500" data-aos-duration="600"
+                        class="flex items-start space-x-3 sm:space-x-4 p-2 sm:p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div class="w-2 h-2 sm:w-3 sm:h-3 lg:w-4 lg:h-4 bg-red-500 rounded-full mt-2 sm:mt-2.5 lg:mt-3 flex-shrink-0"></div>
+                        <p class="text-gray-700 text-sm sm:text-base lg:text-lg" data-i18n="misi_5">Komitmen pada setiap layanan</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
+        <!-- Background Pattern -->
+        <div class="max-w-6xl mx-auto px-4 text-center relative z-10" data-aos="fade-up">
+        <div class="mb-12">
+            <span class="text-sm uppercase tracking-wider text-red-600 font-semibold bg-red-50 px-4 py-2 rounded-full" data-i18n="services_badge">Makes Happen</span>
+            <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-4 bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent" data-i18n="services_title">Our Services</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto" data-i18n="services_subtitle">Solusi teknologi komprehensif untuk mendukung transformasi digital bisnis Anda</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 hover:border-red-200" data-aos="zoom-in" data-aos-delay="100">
+            <div class="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">🧠</div>
+            <h3 class="text-xl font-bold mb-4 text-gray-800" data-i18n="service_1_title">IT Consultant</h3>
+            <p class="text-gray-600 leading-relaxed"  data-i18n="service_1_desc">Membantu merancang strategi dan solusi teknologi terbaik untuk bisnis Anda dengan pendekatan yang inovatif.</p>
+            <div class="mt-6 w-full h-1 bg-gradient-to-r from-red-500 to-red-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            </div>
+
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 hover:border-red-200" data-aos="zoom-in" data-aos-delay="200">
+            <div class="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">🛠️</div>
+            <h3 class="text-xl font-bold mb-4 text-gray-800" data-i18n="service_2_title">IT Infrastructure</h3>
+            <p class="text-gray-600 leading-relaxed" data-i18n="service_2_desc">Implementasi jaringan, server, dan perangkat keras yang andal untuk mendukung operasional bisnis modern.</p>
+            <div class="mt-6 w-full h-1 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            </div>
+
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 hover:border-red-200" data-aos="zoom-in" data-aos-delay="300">
+            <div class="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">💻</div>
+            <h3 class="text-xl font-bold mb-4 text-gray-800" data-i18n="service_3_title">IT Development</h3>
+            <p class="text-gray-600 leading-relaxed" data-i18n="service_3_desc">Pembuatan sistem aplikasi berbasis web maupun mobile sesuai kebutuhan dengan teknologi terdepan.</p>
+            <div class="mt-6 w-full h-1 bg-gradient-to-r from-green-500 to-green-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            </div>
+
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 hover:border-red-200" data-aos="zoom-in" data-aos-delay="400">
+            <div class="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">🏛️</div>
+            <h3 class="text-xl font-bold mb-4 text-gray-800" data-i18n="service_4_title"data-i18n="service_4_title">e-Government</h3>
+            <p class="text-gray-600 leading-relaxed" data-i18n="service_4_desc">Solusi digital untuk layanan pemerintahan yang lebih transparan, efisien, dan responsif kepada masyarakat.</p>
+            <div class="mt-6 w-full h-1 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            </div>
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 hover:border-red-200" data-aos="zoom-in" data-aos-delay="500">
+            <div class="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">📊</div>
+            <h3 class="text-xl font-bold mb-4 text-gray-800" data-i18n="service_5_title">Data Analysis & Optimization</h3>
+            <p class="text-gray-600 leading-relaxed" data-i18n="service_5_desc">Mengoptimalkan data bisnis Anda untuk pengambilan keputusan yang lebih cerdas dan strategis.</p>
+            <div class="mt-6 w-full h-1 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            </div>
+
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 hover:border-red-200" data-aos="zoom-in" data-aos-delay="600">
+            <div class="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">🎓</div>
+            <h3 class="text-xl font-bold mb-4 text-gray-800"data-i18n="service_6_title">Training & Implementation</h3>
+            <p class="text-gray-600 leading-relaxed" data-i18n="service_6_desc">Memberikan pelatihan dan pendampingan implementasi teknologi kepada tim Anda agar berjalan efektif.</p>
+            <div class="mt-6 w-full h-1 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            </div>
+
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 hover:border-red-200" data-aos="zoom-in" data-aos-delay="700">
+            <div class="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">🛡️</div>
+            <h3 class="text-xl font-bold mb-4 text-gray-800" data-i18n="service_7_title">Support After Sales</h3>
+            <p class="text-gray-600 leading-relaxed"data-i18n="service_7_desc">Layanan purna jual untuk memastikan sistem tetap berjalan optimal dan kebutuhan teknis terpenuhi.</p>
+            <div class="mt-6 w-full h-1 bg-gradient-to-r from-pink-500 to-pink-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            </div>
+
+            <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 hover:border-red-200" data-aos="zoom-in" data-aos-delay="800">
+            <div class="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">🚀</div>
+            <h3 class="text-xl font-bold mb-4 text-gray-800"data-i18n="service_8_title">Sint Vitae</h3>
+            <p class="text-gray-600 leading-relaxed" data-i18n="service_8_desc">Solusi teknologi yang dirancang sesuai kebutuhan spesifik dan tantangan unik organisasi Anda.</p>
+            <div class="mt-6 w-full h-1 bg-gradient-to-r from-teal-500 to-teal-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+            </div>
+
+        </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-6xl mx-auto px-4" data-aos="fade-up">
+        <div class="flex flex-col md:flex-row md:items-center md:gap-10">
+            <div class="md:w-1/2">
+            <img src="{{ url_for('static', filename='assets/imgs/about.jpg') }}" alt="About" class="w-full rounded shadow mb-6 md:mb-0">
+            </div>
+            <div class="md:w-1/2">
+            <h6 class="text-sm uppercase tracking-wide text-red-600 mb-2" data-i18n="about_badge">We Create</h6>
+            <h2 class="text-3xl font-bold mb-4" data-i18n="about_title">Awesome Work</h2>
+            <p class="mb-3" data-i18n="about_p1">PT. Ahsani Mitra Solusindo didirikan di Kota Bekasi pada Tanggal 31 Maret 2022.</p>
+            <p data-i18n="about_p2">Perusahaan kami bergerak di bidang Jasa Konsultan (IT), khususnya e-Government di bidang layanan Keuangan, Aset dan Pendapatan Daerah.</p>
+            </div>
+        </div>
+        </div>
+    </section>
+
+
+    <!-- Portfolio -->
+    <section id="portfolio" class="py-20 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-4 text-center" data-aos="fade-up">
+        <h2 class="text-3xl font-bold mb-12" data-i18n="portfolio_title">Our Portfolio</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Project Card 1 -->
+                <!-- <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300" data-aos="flip-left">
+                    <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2"data-i18n="portfolio_1_title">Aplikasi SIM PDL</h3>
+                    <p class="text-sm text-gray-500 mb-4 text-justify leading-relaxed" data-i18n="portfolio_1_desc">Sistem Informasi Manajemen Pajak Daerah Lainnya (SIM PDL) Online ditujukan untuk mengelola data yang berkaitan dengan pajak daerah selain PBB dan BPHTB serta retribusi daerah.</p>
+                    <button onclick="openPopup('popup1')" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                        Read More
+                    </button>
+                </div> -->
+                {% for p in projects %}
+                    <div class="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300" data-aos="flip-left">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                </path>
+                            </svg>
+                        </div>
+
+                        <!-- Judul dari database -->
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">{{ p.judul }}</h3>
+
+                        <!-- Deskripsi dari database -->
+                        <p class="text-sm text-gray-500 mb-4 text-justify leading-relaxed">
+                            {{ p.deskripsi }}
+                        </p>
+
+                        <!-- Tombol Read More yang memanggil popup -->
+                        <button onclick="openPopup('popup{{ p.id }}')"
+                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300">
+                            Read More
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Pop-up 2 -->
+        {% for p in projects %}
+<div id="popup{{ p.id }}" class="popup-overlay fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+    <div class="popup-content bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" data-aos="zoom-in">
+        <div class="p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">{{ p.judul }}</h2>
+                <button onclick="closePopup('popup{{ p.id }}')" class="text-gray-400 hover:text-gray-600 text-2xl">×</button>
+            </div>
+
+            <!-- Video -->
+            {% if p.video_path %}
+            <div class="mb-6">
+                <h3 class="font-semibold text-gray-800 mb-3">Demo Aplikasi:</h3>
+                <video controls class="w-full rounded-lg shadow-lg">
+                    <source src="{{ url_for('static', filename=p.video_path) }}" type="video/mp4">
+                </video>
+            </div>
+            {% endif %}
+
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Klien:</h3>
+                    <p class="text-gray-600">{{ p.klien }}</p>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Deskripsi Proyek:</h3>
+                    <p class="text-gray-600">{{ p.deskripsi }}</p>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Fitur Utama:</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                        {% for fitur in p.fitur_utama.split('\n') %}
+                        <li>{{ fitur }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Teknologi yang Digunakan:</h3>
+                    <div class="flex flex-wrap gap-2">
+                        {% if p.teknologi %}
+                            {% for tech in p.teknologi %}
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">{{ tech }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="text-gray-500 text-sm">Tidak ada data teknologi</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="font-semibold text-gray-800 mb-2">Durasi Proyek:</h3>
+                    <p class="text-gray-600">{{ p.durasi }}</p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button onclick="closePopup('popup{{ p.id }}')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+        <!-- <div id="popup2" class="popup-overlay fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <div class="popup-content bg-white rounded-lg shadow-2xl max-w-2xl w-full" data-aos="zoom-in">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">APLIKASI E-SPTPD</h2>
+                        <button onclick="closePopup('popup2')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5H9m0 0v-2m0 2h10m0 0v-2m0 2a2 2 0 100-4 2 2 0 000 4z"></path>
+                        </svg>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Klien:</h3>
+                            <p class="text-gray-600">Toko Online Modern</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Deskripsi Proyek:</h3>
+                            <p class="text-gray-600">Platform e-commerce lengkap dengan fitur modern yang memungkinkan penjualan online dengan mudah. Sistem ini dilengkapi dengan manajemen produk, sistem pembayaran, dan analitik penjualan.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Fitur Utama:</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Katalog produk yang responsive</li>
+                                <li>Sistem keranjang belanja</li>
+                                <li>Berbagai metode pembayaran</li>
+                                <li>Sistem review dan rating</li>
+                                <li>Dashboard admin dengan analitik</li>
+                                <li>Sistem notifikasi email</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Teknologi yang Digunakan:</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Vue.js</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Laravel</span>
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded text-sm">Redis</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">PostgreSQL</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Durasi Proyek:</h3>
+                            <p class="text-gray-600">8 bulan (Maret - Oktober 2024)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="closePopup('popup2')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-300">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Pop-up 3 -->
+        <div id="popup3" class="popup-overlay fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <div class="popup-content bg-white rounded-lg shadow-2xl max-w-2xl w-full" data-aos="zoom-in">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Learning Management System</h2>
+                        <button onclick="closePopup('popup3')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Klien:</h3>
+                            <p class="text-gray-600">Universitas Indonesia</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Deskripsi Proyek:</h3>
+                            <p class="text-gray-600">Sistem pembelajaran online yang memfasilitasi interaksi antara mahasiswa dan dosen dalam lingkungan virtual. Platform ini dirancang untuk mendukung pembelajaran jarak jauh dengan fitur-fitur yang lengkap.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Fitur Utama:</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Manajemen kelas dan mata kuliah</li>
+                                <li>Sistem assignment dan grading</li>
+                                <li>Forum diskusi interaktif</li>
+                                <li>Video conferencing terintegrasi</li>
+                                <li>Sistem quiz dan ujian online</li>
+                                <li>Laporan progress mahasiswa</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Teknologi yang Digunakan:</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">React.js</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Express.js</span>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">MongoDB</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">Socket.io</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Durasi Proyek:</h3>
+                            <p class="text-gray-600">10 bulan (Februari - November 2024)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="closePopup('popup3')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-300">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pop-up 4 -->
+        <div id="popup4" class="popup-overlay fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <div class="popup-content bg-white rounded-lg shadow-2xl max-w-2xl w-full" data-aos="zoom-in">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Learning Management System</h2>
+                        <button onclick="closePopup('popup4')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Klien:</h3>
+                            <p class="text-gray-600">Universitas Indonesia</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Deskripsi Proyek:</h3>
+                            <p class="text-gray-600">Sistem pembelajaran online yang memfasilitasi interaksi antara mahasiswa dan dosen dalam lingkungan virtual. Platform ini dirancang untuk mendukung pembelajaran jarak jauh dengan fitur-fitur yang lengkap.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Fitur Utama:</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Manajemen kelas dan mata kuliah</li>
+                                <li>Sistem assignment dan grading</li>
+                                <li>Forum diskusi interaktif</li>
+                                <li>Video conferencing terintegrasi</li>
+                                <li>Sistem quiz dan ujian online</li>
+                                <li>Laporan progress mahasiswa</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Teknologi yang Digunakan:</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">React.js</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Express.js</span>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">MongoDB</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">Socket.io</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Durasi Proyek:</h3>
+                            <p class="text-gray-600">10 bulan (Februari - November 2024)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="closePopup('popup4')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-300">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pop-up 5 -->
+        <div id="popup5" class="popup-overlay fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <div class="popup-content bg-white rounded-lg shadow-2xl max-w-2xl w-full" data-aos="zoom-in">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Learning Management System</h2>
+                        <button onclick="closePopup('popup5')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Klien:</h3>
+                            <p class="text-gray-600">Universitas Indonesia</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Deskripsi Proyek:</h3>
+                            <p class="text-gray-600">Sistem pembelajaran online yang memfasilitasi interaksi antara mahasiswa dan dosen dalam lingkungan virtual. Platform ini dirancang untuk mendukung pembelajaran jarak jauh dengan fitur-fitur yang lengkap.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Fitur Utama:</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Manajemen kelas dan mata kuliah</li>
+                                <li>Sistem assignment dan grading</li>
+                                <li>Forum diskusi interaktif</li>
+                                <li>Video conferencing terintegrasi</li>
+                                <li>Sistem quiz dan ujian online</li>
+                                <li>Laporan progress mahasiswa</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Teknologi yang Digunakan:</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">React.js</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Express.js</span>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">MongoDB</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">Socket.io</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Durasi Proyek:</h3>
+                            <p class="text-gray-600">10 bulan (Februari - November 2024)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="closePopup('popup5')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-300">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pop-up 6 -->
+        <div id="popup6" class="popup-overlay fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <div class="popup-content bg-white rounded-lg shadow-2xl max-w-2xl w-full" data-aos="zoom-in">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Learning Management System</h2>
+                        <button onclick="closePopup('popup6')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Klien:</h3>
+                            <p class="text-gray-600">Universitas Indonesia</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Deskripsi Proyek:</h3>
+                            <p class="text-gray-600">Sistem pembelajaran online yang memfasilitasi interaksi antara mahasiswa dan dosen dalam lingkungan virtual. Platform ini dirancang untuk mendukung pembelajaran jarak jauh dengan fitur-fitur yang lengkap.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Fitur Utama:</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Manajemen kelas dan mata kuliah</li>
+                                <li>Sistem assignment dan grading</li>
+                                <li>Forum diskusi interaktif</li>
+                                <li>Video conferencing terintegrasi</li>
+                                <li>Sistem quiz dan ujian online</li>
+                                <li>Laporan progress mahasiswa</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Teknologi yang Digunakan:</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">React.js</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Express.js</span>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">MongoDB</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">Socket.io</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Durasi Proyek:</h3>
+                            <p class="text-gray-600">10 bulan (Februari - November 2024)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="closePopup('popup6')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-300">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pop-up 7 -->
+        <div id="popup7" class="popup-overlay fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <div class="popup-content bg-white rounded-lg shadow-2xl max-w-2xl w-full" data-aos="zoom-in">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Learning Management System</h2>
+                        <button onclick="closePopup('popup7')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Klien:</h3>
+                            <p class="text-gray-600">Universitas Indonesia</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Deskripsi Proyek:</h3>
+                            <p class="text-gray-600">Sistem pembelajaran online yang memfasilitasi interaksi antara mahasiswa dan dosen dalam lingkungan virtual. Platform ini dirancang untuk mendukung pembelajaran jarak jauh dengan fitur-fitur yang lengkap.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Fitur Utama:</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Manajemen kelas dan mata kuliah</li>
+                                <li>Sistem assignment dan grading</li>
+                                <li>Forum diskusi interaktif</li>
+                                <li>Video conferencing terintegrasi</li>
+                                <li>Sistem quiz dan ujian online</li>
+                                <li>Laporan progress mahasiswa</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Teknologi yang Digunakan:</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">React.js</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Express.js</span>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">MongoDB</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">Socket.io</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Durasi Proyek:</h3>
+                            <p class="text-gray-600">10 bulan (Februari - November 2024)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="closePopup('popup7')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-300">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pop-up 8 -->
+        <div id="popup8" class="popup-overlay fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <div class="popup-content bg-white rounded-lg shadow-2xl max-w-2xl w-full" data-aos="zoom-in">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Learning Management System</h2>
+                        <button onclick="closePopup('popup8')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Klien:</h3>
+                            <p class="text-gray-600">Universitas Indonesia</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Deskripsi Proyek:</h3>
+                            <p class="text-gray-600">Sistem pembelajaran online yang memfasilitasi interaksi antara mahasiswa dan dosen dalam lingkungan virtual. Platform ini dirancang untuk mendukung pembelajaran jarak jauh dengan fitur-fitur yang lengkap.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Fitur Utama:</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Manajemen kelas dan mata kuliah</li>
+                                <li>Sistem assignment dan grading</li>
+                                <li>Forum diskusi interaktif</li>
+                                <li>Video conferencing terintegrasi</li>
+                                <li>Sistem quiz dan ujian online</li>
+                                <li>Laporan progress mahasiswa</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Teknologi yang Digunakan:</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">React.js</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Express.js</span>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">MongoDB</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">Socket.io</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Durasi Proyek:</h3>
+                            <p class="text-gray-600">10 bulan (Februari - November 2024)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="closePopup('popup8')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-300">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pop-up 9 -->
+        <div id="popup9" class="popup-overlay fixed inset-0 z-50 flex items-center justify-center p-4 hidden">
+            <div class="popup-content bg-white rounded-lg shadow-2xl max-w-2xl w-full" data-aos="zoom-in">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-gray-800">Learning Management System</h2>
+                        <button onclick="closePopup('popup9')" class="text-gray-400 hover:text-gray-600 text-2xl">
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg class="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Klien:</h3>
+                            <p class="text-gray-600">Universitas Indonesia</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Deskripsi Proyek:</h3>
+                            <p class="text-gray-600">Sistem pembelajaran online yang memfasilitasi interaksi antara mahasiswa dan dosen dalam lingkungan virtual. Platform ini dirancang untuk mendukung pembelajaran jarak jauh dengan fitur-fitur yang lengkap.</p>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Fitur Utama:</h3>
+                            <ul class="list-disc list-inside text-gray-600 space-y-1">
+                                <li>Manajemen kelas dan mata kuliah</li>
+                                <li>Sistem assignment dan grading</li>
+                                <li>Forum diskusi interaktif</li>
+                                <li>Video conferencing terintegrasi</li>
+                                <li>Sistem quiz dan ujian online</li>
+                                <li>Laporan progress mahasiswa</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Teknologi yang Digunakan:</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">React.js</span>
+                                <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Express.js</span>
+                                <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">MongoDB</span>
+                                <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-sm">Socket.io</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="font-semibold text-gray-800 mb-2">Durasi Proyek:</h3>
+                            <p class="text-gray-600">10 bulan (Februari - November 2024)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end">
+                        <button onclick="closePopup('popup9')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-300">
+                            Tutup
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <section id="testimonial" class="py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4 text-center" data-aos="fade-up">
+        <h6 class="text-sm uppercase tracking-wide text-gray-500 mb-2">Testimonial</h6>
+        <h2 class="text-3xl font-bold mb-12">What Our Clients Says</h2>
+
+        <div class="mb-12">
+            <img src="{{ url_for('static', filename='assets/imgs/map-indonesia.png') }}" alt="Map of Indonesia" class="w-full rounded shadow">
+        </div>
+
+        <div class="max-w-7xl mx-auto">
+            <!-- Container untuk 3 provinsi yang dipusatkan -->
+            <div class="flex justify-center">
+                <div class="w-full max-w-6xl">
+
+                    <!-- PROVINSI JAWA BARAT -->
+                    <div class="mb-8">
+                        
+                        <!-- <div class="bg-blue-100 p-4 rounded-lg shadow-lg hover:shadow-xl mb-4" data-aos="fade-down">
+                            <img src="{{ url_for('static', filename='assets/client/Logo-Provinsi-Jawa-Barat.png') }}" class="w-20 mx-auto mb-4">
+                            <h6 class="font-bold text-xl text-center text-blue-800">Provinsi Jawa Barat</h6>
+                        </div> -->
+
+                         {% for p in provinces %}
+                            <div class="mb-8">
+                                <div class="bg-blue-100 p-4 rounded-lg shadow-lg hover:shadow-xl mb-4" data-aos="fade-down">
+                                    <img src="{{ url_for('static', filename=p.logo) }}" class="w-20 mx-auto mb-4">
+                                    <h6 class="font-bold text-xl text-center text-blue-800">{{ p.name }}</h6>
+                                </div>
+                                <!-- Kota -->
+                                {% if p.kota %}
+                                <div class="mb-4">
+                                    <h7 class="font-semibold text-lg text-gray-700 mb-2 block">Kota:</h7>
+                                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        {% for k in p.kota %}
+                                        <div class="bg-green-50 p-4 rounded-lg shadow hover:shadow-md" data-aos="zoom-in">
+                                            <img src="{{ url_for('static', filename=k.logo) }}" class="w-20 mx-auto mb-4">
+                                            <h6 class="font-semibold text-lg">{{ k.name }}</h6>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <!-- Kabupaten -->
+                                {% if p.kabupaten %}
+                                <div class="mb-4">
+                                    <h7 class="font-semibold text-lg text-gray-700 mb-2 block">Kabupaten:</h7>
+                                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                                        {% for kab in p.kabupaten %}
+                                        <div class="bg-yellow-50 p-4 rounded-lg shadow hover:shadow-md" data-aos="zoom-in">
+                                            <img src="{{ url_for('static', filename=kab.logo) }}" class="w-20 mx-auto mb-4">
+                                            <h6 class="font-semibold text-lg">{{ kab.name }}</h6>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-12 sm:py-16 md:py-20 bg-gradient-to-br from-gray-900 to-gray-800 text-white relative overflow-hidden">
+    <!-- Background Effects -->
+    <div class="absolute inset-0">
+        <div class="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_70%_30%,rgba(239,68,68,0.1),transparent_50%)]"></div>
+        <div class="absolute bottom-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_70%,rgba(59,130,246,0.1),transparent_50%)]"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" data-aos="fade-up">
+        <!-- Header -->
+        <div class="text-center mb-8 sm:mb-12">
+            <span class="text-xs sm:text-sm uppercase tracking-wider text-red-400 font-semibold bg-red-900/20 px-3 sm:px-4 py-2 rounded-full inline-block" data-i18n="contact_badge">Get Here</span>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-4 mb-4 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent" data-i18n="contact_title">Contact Us</h2>
+            <p class="text-gray-300 max-w-2xl mx-auto text-sm sm:text-base px-4 sm:px-0" data-i18n="contact_subtitle">Hubungi kami untuk konsultasi gratis dan diskusi kebutuhan teknologi bisnis Anda</p>
+        </div>
+
+        <!-- Main Content -->
+        <div class="bg-white/10 backdrop-blur-sm p-4 sm:p-6 lg:p-8 rounded-2xl shadow-2xl border border-white/20">
+            <div class="grid lg:grid-cols-2 gap-8 lg:gap-12">
+                
+                <!-- Contact Info -->
+                <div class="space-y-6 sm:space-y-8 order-2 lg:order-1" data-aos="fade-right">
+                    
+                    <!-- Location -->
+                    <div class="flex items-start gap-3 sm:gap-4 group">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                            <i class="bx bx-location-pin text-lg sm:text-xl text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-base sm:text-lg mb-2 text-white">Location</h5>
+                            <p class="text-gray-300 leading-relaxed text-sm sm:text-base">
+                                Pertamina 34.17417 Ruko No.7<br>
+                                Jl. Raya Jatiasih RT.007 RW.005<br>
+                                Pekayon - Bekasi 17424
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="flex items-start gap-3 sm:gap-4 group">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                            <i class="bx bx-mobile-alt text-lg sm:text-xl text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-base sm:text-lg mb-2 text-white">Phone Number</h5>
+                            <p class="text-gray-300 text-sm sm:text-base">(+62) 816-1909-234</p>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="flex items-start gap-3 sm:gap-4 group">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                            <i class="bx bx-at text-lg sm:text-xl text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-base sm:text-lg mb-2 text-white">Email Address</h5>
+                            <p class="text-gray-300 text-sm sm:text-base break-all">info@ahsanimitrasolusindo.com</p>
+                        </div>
+                    </div>
+
+                    <!-- Website -->
+                    <div class="flex items-start gap-3 sm:gap-4 group">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
+                            <i class="bx bx-globe-alt text-lg sm:text-xl text-white"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h5 class="font-semibold text-base sm:text-lg mb-2 text-white">Website</h5>
+                            <p class="text-gray-300 text-sm sm:text-base break-all">www.ahsanimitrasolusindo.com</p>
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="pt-6 border-t border-white/20">
+                        <h5 class="font-semibold text-base sm:text-lg mb-4 text-white">Follow Us</h5>
+                        <div class="flex flex-wrap gap-3 sm:gap-4">
+                            <a href="#" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                <i class="fa-brands fa-facebook-f text-white text-sm sm:text-base"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                <i class="fa-brands fa-linkedin text-white text-sm sm:text-base"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 sm:w-12 sm:h-12 bg-green-500 hover:bg-green-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                <i class="fa-brands fa-whatsapp text-white text-sm sm:text-base"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 sm:w-12 sm:h-12 bg-pink-500 hover:bg-pink-600 rounded-lg flex items-center justify-center transition-all duration-300 hover:scale-110">
+                                <i class="fa-brands fa-instagram text-white text-sm sm:text-base"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form & Map -->
+                <div class="space-y-6 sm:space-y-8 order-1 lg:order-2" data-aos="fade-left">
+                    <div>
+                        <h3 class="text-xl sm:text-2xl font-bold mb-6 text-white">Get In Touch</h3>
+                        
+                        <!-- Map -->
+                        <div class="rounded-2xl overflow-hidden shadow-lg mb-6 sm:mb-8">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52594.73208273775!2d106.96144958960767!3d-6.265513447345598!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e698d908c0e7225%3A0x1e111525d56f758e!2sopenSIPKD-Bekasi!5e0!3m2!1sid!2sid!4v1623567031640!5m2!1sid!2sid"
+                                width="100%"
+                                height="300"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                class="w-full h-48 sm:h-64 md:h-72 lg:h-80">
+                            </iframe>
+                        </div>
+
+                        <!-- Contact Form -->
+                        <form class="space-y-4 sm:space-y-6" action="/send_message" method="POST">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <input type="text" name="name" placeholder="Your Name" required 
+                                           class="w-full p-3 sm:p-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base">
+                                </div>
+                                <div>
+                                    <input type="email" name="email" placeholder="Your Email" required 
+                                           class="w-full p-3 sm:p-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base">
+                                </div>
+                            </div>
+                            <div>
+                                <input type="text" name="subject" placeholder="Subject" required 
+                                       class="w-full p-3 sm:p-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 text-sm sm:text-base">
+                            </div>
+                            <div>
+                                <textarea name="message" placeholder="Your Message" rows="4" required 
+                                          class="w-full p-3 sm:p-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-300 resize-none text-sm sm:text-base"></textarea>
+                            </div>
+                            <button type="submit" 
+                                    class="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white py-3 sm:py-4 rounded-xl font-semibold text-sm sm:text-base lg:text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg flex items-center justify-center group">
+                                <span>Send Message</span>
+                                <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform text-sm sm:text-base"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-red-900/10 to-blue-900/10"></div>
+    <div class="max-w-6xl mx-auto px-4 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div class="md:col-span-2">
+            <h3 class="text-2xl font-bold mb-4 bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">PT Ahsani Mitra Solusindo</h3>
+            <p class="text-gray-400 mb-4 leading-relaxed">Perusahaan kami bergerak di bidang Jasa Konsultan (IT). Khususnya e-Goverment di bidang layanan Keuangan, Aset dan Pendapatan Daerah.</p>
+            <div class="flex space-x-4">
+            <a href="#" class="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center transition-colors duration-300">
+                <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <a href="#" class="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center transition-colors duration-300">
+                <i class="fa-brands fa-linkedin"></i>
+            </a>
+            <a href="#" class="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-lg flex items-center justify-center transition-colors duration-300">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+            </div>
+        </div>
+        <div>
+            <h4 class="text-lg font-semibold mb-4">Services</h4>
+            <ul class="space-y-2 text-gray-400">
+            <li><a href="#" class="hover:text-red-400 transition-colors">IT Consultant</a></li>
+            <li><a href="#" class="hover:text-red-400 transition-colors">IT Infrastructure</a></li>
+            <li><a href="#" class="hover:text-red-400 transition-colors">IT Development</a></li>
+            <li><a href="#" class="hover:text-red-400 transition-colors">e-Government</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2 text-gray-400">
+            <li><a href="#home" class="hover:text-red-400 transition-colors">Home</a></li>
+            <li><a href="#about" class="hover:text-red-400 transition-colors">About</a></li>
+            <li><a href="#portfolio" class="hover:text-red-400 transition-colors">Portfolio</a></li>
+            <li><a href="#contact" class="hover:text-red-400 transition-colors">Contact</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4 class="text-lg font-semibold mb-4">Contact Info</h4>
+            <p class="text-gray-400 mb-2">Contact us and we'll get back to you within 24 hours.</p>
+            <p class="text-gray-400 mb-2">
+            <i class="ti-location-pin mr-2"></i> Pertamina 34.17417 Ruko No.7<br>
+            Jl. Raya Jatiasih RT.007 RW.005<br>
+            Pekayon - Bekasi 17424
+            </p>
+            <p class="text-gray-400">
+            <i class="ti-email mr-2"></i> info@website.com
+            </p>
+        </div>
+        </div>
+        <div class="border-t border-gray-800 pt-8 text-center">
+        <p class="text-gray-400">&copy; 2025 PT Ahsani Mitra Solusindo. All rights reserved.</p>
+        </div>
+    </div>
+    </footer>
+
+    <!-- === Background Audio === -->
+    <audio id="background-music" src="{{ url_for('static', filename='assets/audio/download.wav') }}"></audio>
+
+    <!-- Sound Toggle Button -->
+    <button id="sound-toggle" 
+            class="sound-button fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white rounded-full shadow-2xl transform transition-all duration-300 hover:scale-110 hover:-translate-y-1 active:scale-95 focus:outline-none focus:ring-4 focus:ring-red-300 group float z-50"
+            data-aos="zoom-in" 
+            data-aos-delay="600"
+            data-aos-duration="800">
+        
+        <!-- Pulse Ring Effect -->
+        <div class="absolute inset-0 rounded-full bg-red-400 opacity-20 pulse-ring"></div>
+        
+        <!-- Sound Icon Container -->
+        <div class="flex items-center justify-center w-full h-full relative z-10">
+            <!-- Sound ON Icon -->
+            <div id="sound-on" class="flex items-center space-x-0.5 transition-all duration-300">
+                <div class="w-0.5 h-2 md:w-1 md:h-3 bg-white rounded-full sound-wave"></div>
+                <div class="w-0.5 h-3 md:w-1 md:h-4 bg-white rounded-full sound-wave"></div>
+                <div class="w-0.5 h-2 md:w-1 md:h-3 bg-white rounded-full sound-wave"></div>
+                <div class="w-0.5 h-4 md:w-1 md:h-5 bg-white rounded-full sound-wave"></div>
+            </div>
+            
+            <!-- Sound OFF Icon -->
+            <div id="sound-off" class="hidden transition-all duration-300">
+                <svg class="w-4 h-4 md:w-6 md:h-6" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.617.816L4.336 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.336l4.047-3.816a1 1 0 011.617-.816zM7.829 9L9 8.162V11.838L7.829 11H3v-2h4.829z" clip-rule="evenodd"/>
+                    <path d="M11.293 7.293a1 1 0 011.414 0L14 8.586l1.293-1.293a1 1 0 111.414 1.414L15.414 10l1.293 1.293a1 1 0 01-1.414 1.414L14 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L12.586 10l-1.293-1.293a1 1 0 010-1.414z"/>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Glowing Effect -->
+        <div class="absolute inset-0 rounded-full bg-gradient-to-r from-red-400 to-pink-500 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+        
+        <!-- Ripple effect on click -->
+        <div class="ripple absolute inset-0 rounded-full bg-white opacity-0 transform scale-0 transition-all duration-300"></div>
+    </button>
+  <!-- AOS Script & Hamburger Script -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="{{ url_for('static', filename='assets/js/lang.js') }}"></script>
+  <script>
+    AOS.init();
+
+    // const btn = document.getElementById('menu-btn');
+    // const menu = document.getElementById('mobile-menu');
+
+    // btn.addEventListener('click', () => {
+    //   menu.classList.toggle('hidden');
+    // });
+    // Ambil elemen hamburger button dan menu
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        // Tambahkan event listener untuk klik
+        menuBtn.addEventListener('click', function() {
+            // Toggle class 'menu-open' pada button
+            menuBtn.classList.toggle('menu-open');
+            
+            // Toggle tampilan menu
+            mobileMenu.classList.toggle('hidden');
+        });
+          const audio = document.getElementById('background-music');
+        const toggleBtn = document.getElementById('sound-toggle');
+        const soundOn = document.getElementById('sound-on');
+        const soundOff = document.getElementById('sound-off');
+        
+        let isPlaying = false;
+        audio.volume = 0.3;
+
+        // Initial state
+        updateButtonState();
+
+        // Toggle functionality
+        toggleBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+            } else {
+                audio.play().catch(() => {
+                    console.log('Audio play failed');
+                });
+                isPlaying = true;
+            }
+            updateButtonState();
+        });
+
+        // Update button appearance
+        function updateButtonState() {
+            if (isPlaying) {
+                soundOn.classList.remove('hidden');
+                soundOff.classList.add('hidden');
+                toggleBtn.classList.add('animate-pulse');
+            } else {
+                soundOn.classList.add('hidden');
+                soundOff.classList.remove('hidden');
+                toggleBtn.classList.remove('animate-pulse');
+            }
+        }
+
+        // Handle audio events
+        audio.addEventListener('play', () => {
+            isPlaying = true;
+            updateButtonState();
+        });
+
+        audio.addEventListener('pause', () => {
+            isPlaying = false;
+            updateButtonState();
+        });
+
+        audio.addEventListener('ended', () => {
+            isPlaying = false;
+            updateButtonState();
+        });
+        // Popup functions
+        function openPopup(popupId) {
+            const popup = document.getElementById(popupId);
+            popup.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            // Reinitialize AOS for popup content
+            AOS.refresh();
+        }
+
+        function closePopup(popupId) {
+            const popup = document.getElementById(popupId);
+            popup.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close popup when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('popup-overlay')) {
+                const popupId = e.target.id;
+                closePopup(popupId);
+            }
+        });
+
+        // Close popup with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const openPopups = document.querySelectorAll('.popup-overlay:not(.hidden)');
+                openPopups.forEach(popup => {
+                    closePopup(popup.id);
+                });
+            }
+        });
+  </script>
+
+</body>
+</html>
