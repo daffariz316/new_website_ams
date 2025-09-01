@@ -9,6 +9,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="{{ url_for('static', filename='assets/imgs/logo.ico') }}" type="image/x-icon"/>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
     <script>
         tailwind.config = {
             theme: {
@@ -76,33 +79,37 @@
                         <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                     </div>
                     
-                    <button class="p-2 rounded-lg hover:bg-gray-100 relative" data-aos="fade-down" data-aos-delay="200">
-                        <i class="fas fa-bell text-gray-600"></i>
-                        <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></span>
-                    </button>
-                    
-                    <!-- <div class="flex items-center space-x-3" data-aos="fade-down" data-aos-delay="300">
-                        <img src="{{ url_for('static', filename='assets/imgs/profile-picture.png') }}" alt="Profile" class="w-8 h-8 rounded-full object-cover">
-                        <span class="hidden md:block text-gray-700 font-medium"> {{ user.name }}</span>
-                        <i class="fas fa-chevron-down text-gray-400"></i>
-                    </div> -->
-                     <div class="relative" x-data="{ open: false }" data-aos="fade-down" data-aos-delay="300">
-                <!-- Trigger -->
-                <div class="flex items-center space-x-3 cursor-pointer" @click="open = !open">
-                    <img  src="{{ url_for('static', filename='assets/imgs/profile-picture.png') }}" alt="Profile" class="w-8 h-8 rounded-full object-cover">
-                    <span class="hidden md:block text-gray-700 font-medium">
-                    {{ user.name }}
-                    </span>
-                    <i class="fas fa-chevron-down text-gray-400"></i>
-                </div>
+                     <!-- User Menu -->
+                    <div class="flex items-center space-x-3">
+                        <div x-data="{ open: false }" class="relative flex items-center space-x-3 pl-4 border-l border-gray-200 cursor-pointer" data-aos="fade-left" data-aos-delay="200">
+                            <!-- Avatar -->
+                            <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold animate-float">
+                                {{ user.name[0]|upper }}{{ user.name[1]|upper }}
+                            </div>
 
-                <!-- Dropdown -->
-                <div x-show="open"  @click.away="open = false" x-transition class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50">
-                    <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    Sign Out
-                    </a>
-                </div>
-                </div>
+                            <!-- Username -->
+                            <div class="hidden md:block">
+                                <p class="text-sm font-medium text-gray-700">{{ user.name }}</p>
+                                <p class="text-xs text-gray-500">Administrator</p>
+                            </div>
+
+                            <!-- Panah animasi -->
+                            <i class="fas fa-chevron-down text-gray-400 text-sm transition-transform duration-200"
+                            :class="{ 'rotate-180': open }"
+                            @click="open = !open"></i>
+
+                            <!-- Dropdown -->
+                            <div x-show="open" @click.outside="open = false"
+                                x-transition
+                                class="absolute top-full right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                                <a href="{{ url_for('logout') }}" 
+                                    class="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                                    onclick="confirmLogout(event)">
+                                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -114,14 +121,11 @@
                 <div class="bg-white p-6 rounded-xl shadow-sm border" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm">Total Pengguna</p>
-                            <p class="text-3xl font-bold text-gray-800">2,543</p>
-                            <p class="text-green-600 text-sm mt-1">
-                                <i class="fas fa-arrow-up"></i> +12%
-                            </p>
+                            <p class="text-gray-600 text-sm">Total Provinsi</p>
+                            <p class="text-3xl font-bold text-gray-800">{{ total_provinces }}</p>
                         </div>
                         <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-users text-blue-600"></i>
+                             <i class="fas fa-map text-blue-600 text-xl"></i>
                         </div>
                     </div>
                 </div>
@@ -129,14 +133,11 @@
                 <div class="bg-white p-6 rounded-xl shadow-sm border" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm">Penjualan</p>
-                            <p class="text-3xl font-bold text-gray-800">Rp 45.2M</p>
-                            <p class="text-green-600 text-sm mt-1">
-                                <i class="fas fa-arrow-up"></i> +8%
-                            </p>
+                            <p class="text-gray-600 text-sm">Total Region</p>
+                            <p class="text-3xl font-bold text-gray-800">{{ total_regions }}</p>
                         </div>
                         <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-dollar-sign text-green-600"></i>
+                            <i class="fas fa-map-marked-alt text-green-600 text-xl"></i>
                         </div>
                     </div>
                 </div>
@@ -144,14 +145,11 @@
                 <div class="bg-white p-6 rounded-xl shadow-sm border" data-aos="fade-up" data-aos-delay="300">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm">Pesanan</p>
-                            <p class="text-3xl font-bold text-gray-800">1,234</p>
-                            <p class="text-red-600 text-sm mt-1">
-                                <i class="fas fa-arrow-down"></i> -3%
-                            </p>
+                            <p class="text-gray-600 text-sm">Total Kota</p>
+                            <p class="text-3xl font-bold text-gray-800">{{ total_kota }}</p>
                         </div>
                         <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-shopping-cart text-orange-600"></i>
+                            <i class="fas fa-city text-orange-600 text-xl"></i>
                         </div>
                     </div>
                 </div>
@@ -159,262 +157,39 @@
                 <div class="bg-white p-6 rounded-xl shadow-sm border" data-aos="fade-up" data-aos-delay="400">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-600 text-sm">Produk</p>
-                            <p class="text-3xl font-bold text-gray-800">856</p>
-                            <p class="text-green-600 text-sm mt-1">
-                                <i class="fas fa-arrow-up"></i> +5%
-                            </p>
+                            <p class="text-gray-600 text-sm">Total Kabupaten</p>
+                            <p class="text-3xl font-bold text-gray-800">{{ total_kabupaten }}</p>
                         </div>
                         <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <i class="fas fa-box text-purple-600"></i>
+                            <i class="fas fa-landmark text-purple-600 text-xl"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts and Tables -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-                <!-- Chart -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border" data-aos="fade-up" data-aos-delay="500">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Grafik Penjualan</h3>
-                    <div class="h-64 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg flex items-center justify-center">
-                        <div class="text-center">
-                            <i class="fas fa-chart-line text-4xl text-gray-400 mb-2"></i>
-                            <p class="text-gray-500">Grafik akan ditampilkan di sini</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Recent Activity -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border" data-aos="fade-up" data-aos-delay="600">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Aktivitas Terbaru</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-user text-blue-600 text-xs"></i>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-800">Pengguna baru mendaftar</p>
-                                <p class="text-xs text-gray-500">2 menit yang lalu</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-shopping-cart text-green-600 text-xs"></i>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-800">Pesanan baru diterima</p>
-                                <p class="text-xs text-gray-500">5 menit yang lalu</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-box text-orange-600 text-xs"></i>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-800">Produk baru ditambahkan</p>
-                                <p class="text-xs text-gray-500">10 menit yang lalu</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                                <i class="fas fa-cog text-purple-600 text-xs"></i>
-                            </div>
-                            <div class="flex-1">
-                                <p class="text-sm font-medium text-gray-800">Pengaturan diperbarui</p>
-                                <p class="text-xs text-gray-500">15 menit yang lalu</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Add New Form -->
-            <div id="addForm" class="bg-white rounded-xl shadow-sm border mb-8 hidden" data-aos="fade-up" data-aos-delay="600">
-                <div class="p-6 border-b">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-gray-800">Tambah Pesanan Baru</h3>
-                        <button id="closeForm" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                            <i class="fas fa-times text-gray-500"></i>
+            <!-- Peta -->
+            <!-- <div id="map" class="w-full h-96 rounded-xl shadow mb-8"></div> -->
+              <div class="bg-white p-6 rounded-xl shadow-sm border mb-8" data-aos="zoom-in" data-aos-delay="500">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Peta Wilayah Indonesia</h3>
+                    <div class="flex space-x-2">
+                        <button onclick="changeMapSize('small')" class="px-3 py-1 text-xs bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
+                            Kecil
+                        </button>
+                        <button onclick="changeMapSize('medium')" class="px-3 py-1 text-xs bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors">
+                            Sedang
+                        </button>
+                        <button onclick="changeMapSize('large')" class="px-3 py-1 text-xs bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors">
+                            Besar
                         </button>
                     </div>
                 </div>
-                
-                <form class="p-6" id="orderForm">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Customer Information -->
-                        <div class="space-y-4" data-aos="fade-right" data-aos-delay="100">
-                            <h4 class="text-md font-semibold text-gray-700 border-b pb-2">Informasi Pelanggan</h4>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
-                                <input type="text" id="customerName" required 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400"
-                                       placeholder="Masukkan nama lengkap">
-                                <div class="invalid-feedback text-red-500 text-sm mt-1 hidden">Nama lengkap wajib diisi</div>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
-                                <input type="email" id="customerEmail" required 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400"
-                                       placeholder="customer@example.com">
-                                <div class="invalid-feedback text-red-500 text-sm mt-1 hidden">Email tidak valid</div>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Nomor Telepon</label>
-                                <input type="tel" id="customerPhone" 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400"
-                                       placeholder="+62 812-3456-7890">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Alamat</label>
-                                <textarea id="customerAddress" rows="3" 
-                                          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400 resize-none"
-                                          placeholder="Alamat lengkap pelanggan"></textarea>
-                            </div>
-                        </div>
-                        
-                        <!-- Order Information -->
-                        <div class="space-y-4" data-aos="fade-left" data-aos-delay="200">
-                            <h4 class="text-md font-semibold text-gray-700 border-b pb-2">Informasi Pesanan</h4>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Kategori Produk *</label>
-                                <select id="productCategory" required 
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400">
-                                    <option value="">Pilih kategori</option>
-                                    <option value="electronics">Elektronik</option>
-                                    <option value="fashion">Fashion</option>
-                                    <option value="books">Buku</option>
-                                    <option value="home">Rumah Tangga</option>
-                                    <option value="sports">Olahraga</option>
-                                </select>
-                                <div class="invalid-feedback text-red-500 text-sm mt-1 hidden">Pilih kategori produk</div>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Produk *</label>
-                                <input type="text" id="productName" required 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400"
-                                       placeholder="Nama produk yang dipesan">
-                                <div class="invalid-feedback text-red-500 text-sm mt-1 hidden">Nama produk wajib diisi</div>
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Jumlah *</label>
-                                    <input type="number" id="quantity" required min="1" value="1"
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400">
-                                </div>
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-2">Harga (Rp) *</label>
-                                    <input type="number" id="price" required min="0" step="1000"
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400"
-                                           placeholder="0">
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Status Pesanan</label>
-                                <select id="orderStatus" 
-                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400">
-                                    <option value="pending">Menunggu</option>
-                                    <option value="processing">Diproses</option>
-                                    <option value="shipped">Dikirim</option>
-                                    <option value="delivered">Selesai</option>
-                                    <option value="cancelled">Dibatalkan</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Pesanan</label>
-                                <input type="date" id="orderDate" 
-                                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Additional Information -->
-                    <div class="mt-6" data-aos="fade-up" data-aos-delay="300">
-                        <h4 class="text-md font-semibold text-gray-700 border-b pb-2 mb-4">Informasi Tambahan</h4>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Metode Pembayaran</label>
-                                <div class="space-y-2">
-                                    <label class="flex items-center">
-                                        <input type="radio" name="paymentMethod" value="bank_transfer" class="text-primary focus:ring-primary">
-                                        <span class="ml-2 text-sm text-gray-700">Transfer Bank</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="radio" name="paymentMethod" value="credit_card" class="text-primary focus:ring-primary">
-                                        <span class="ml-2 text-sm text-gray-700">Kartu Kredit</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="radio" name="paymentMethod" value="ewallet" class="text-primary focus:ring-primary">
-                                        <span class="ml-2 text-sm text-gray-700">E-Wallet</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="radio" name="paymentMethod" value="cod" class="text-primary focus:ring-primary">
-                                        <span class="ml-2 text-sm text-gray-700">Bayar di Tempat (COD)</span>
-                                    </label>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Opsi Pengiriman</label>
-                                <div class="space-y-2">
-                                    <label class="flex items-center">
-                                        <input type="checkbox" id="expressShipping" class="text-primary focus:ring-primary">
-                                        <span class="ml-2 text-sm text-gray-700">Pengiriman Express (+Rp 25.000)</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="checkbox" id="giftWrap" class="text-primary focus:ring-primary">
-                                        <span class="ml-2 text-sm text-gray-700">Bungkus Kado (+Rp 15.000)</span>
-                                    </label>
-                                    <label class="flex items-center">
-                                        <input type="checkbox" id="insurance" class="text-primary focus:ring-primary">
-                                        <span class="ml-2 text-sm text-gray-700">Asuransi Pengiriman (+Rp 10.000)</span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Catatan Pesanan</label>
-                            <textarea id="orderNotes" rows="3" 
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 hover:border-gray-400 resize-none"
-                                      placeholder="Tambahkan catatan khusus untuk pesanan ini..."></textarea>
-                        </div>
-                    </div>
-                    
-                    <!-- Form Actions -->
-                    <div class="flex flex-col sm:flex-row gap-4 mt-8 pt-6 border-t" data-aos="fade-up" data-aos-delay="400">
-                        <button type="submit" 
-                                class="flex-1 bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium focus:ring-2 focus:ring-primary focus:ring-offset-2">
-                            <i class="fas fa-save mr-2"></i>Simpan Pesanan
-                        </button>
-                        <button type="button" id="saveAsDraft"
-                                class="flex-1 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors font-medium focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                            <i class="fas fa-file-alt mr-2"></i>Simpan sebagai Draft
-                        </button>
-                        <button type="button" id="resetForm"
-                                class="flex-1 border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium focus:ring-2 focus:ring-gray-300 focus:ring-offset-2">
-                            <i class="fas fa-redo mr-2"></i>Reset Form
-                        </button>
-                    </div>
-                </form>
+                <!-- Peta dengan ukuran responsif yang lebih kecil -->
+                <div id="map" class="w-full rounded-xl shadow-inner"></div>
             </div>
         </main>
     </div>
-
-    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         // Initialize AOS
         AOS.init({
@@ -438,7 +213,6 @@
             overlay.classList.add('hidden');
         });
 
-        // Auto-close sidebar on resize if screen becomes large
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 1024) {
                 sidebar.classList.remove('-translate-x-full');
@@ -448,247 +222,82 @@
             }
         });
 
-        // Add hover effects to table rows
-        const tableRows = document.querySelectorAll('tbody tr');
-        tableRows.forEach(row => {
-            row.addEventListener('mouseenter', () => {
-                row.style.transform = 'scale(1.01)';
-                row.style.transition = 'transform 0.2s ease-in-out';
-            });
-            
-            row.addEventListener('mouseleave', () => {
-                row.style.transform = 'scale(1)';
-            });
-        });
-
-        // Form functionality
-        const showAddFormBtn = document.getElementById('showAddForm');
-        const addForm = document.getElementById('addForm');
-        const closeFormBtn = document.getElementById('closeForm');
-        const orderForm = document.getElementById('orderForm');
-        const resetFormBtn = document.getElementById('resetForm');
-        const saveAsDraftBtn = document.getElementById('saveAsDraft');
-
-        // Show form
-        showAddFormBtn.addEventListener('click', () => {
-            addForm.classList.remove('hidden');
-            addForm.scrollIntoView({ behavior: 'smooth' });
-            AOS.refresh();
-        });
-
-        // Close form
-        closeFormBtn.addEventListener('click', () => {
-            addForm.classList.add('hidden');
-        });
-
-        // Form validation
-        function validateForm() {
-            let isValid = true;
-            const requiredFields = ['customerName', 'customerEmail', 'productCategory', 'productName', 'quantity', 'price'];
-            
-            requiredFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                const feedback = field.parentNode.querySelector('.invalid-feedback');
-                
-                if (!field.value.trim()) {
-                    field.classList.add('border-red-500');
-                    if (feedback) feedback.classList.remove('hidden');
-                    isValid = false;
-                } else {
-                    field.classList.remove('border-red-500');
-                    if (feedback) feedback.classList.add('hidden');
-                }
-            });
-
-            // Email validation
-            const emailField = document.getElementById('customerEmail');
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (emailField.value && !emailRegex.test(emailField.value)) {
-                emailField.classList.add('border-red-500');
-                const feedback = emailField.parentNode.querySelector('.invalid-feedback');
-                if (feedback) {
-                    feedback.textContent = 'Format email tidak valid';
-                    feedback.classList.remove('hidden');
-                }
-                isValid = false;
-            }
-
-            return isValid;
-        }
-
-        // Form submission
-        orderForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            if (validateForm()) {
-                // Show success animation
-                const submitBtn = e.target.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
-                submitBtn.disabled = true;
-                
-                setTimeout(() => {
-                    // Simulate save success
-                    submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Berhasil Disimpan!';
-                    submitBtn.classList.remove('bg-primary', 'hover:bg-blue-600');
-                    submitBtn.classList.add('bg-green-500');
-                    
-                    setTimeout(() => {
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.classList.remove('bg-green-500');
-                        submitBtn.classList.add('bg-primary', 'hover:bg-blue-600');
-                        submitBtn.disabled = false;
-                        orderForm.reset();
-                        addForm.classList.add('hidden');
-                        
-                        // Show success notification
-                        showNotification('Pesanan berhasil disimpan!', 'success');
-                    }, 2000);
-                }, 1500);
-            }
-        });
-
-        // Reset form
-        resetFormBtn.addEventListener('click', () => {
-            orderForm.reset();
-            // Remove validation classes
-            const fields = orderForm.querySelectorAll('input, select, textarea');
-            fields.forEach(field => {
-                field.classList.remove('border-red-500');
-                const feedback = field.parentNode.querySelector('.invalid-feedback');
-                if (feedback) feedback.classList.add('hidden');
-            });
-        });
-
-        // Save as draft
-        saveAsDraftBtn.addEventListener('click', () => {
-            showNotification('Draft berhasil disimpan!', 'info');
-        });
-
-        // Real-time validation
-        const formFields = document.querySelectorAll('#orderForm input, #orderForm select');
-        formFields.forEach(field => {
-            field.addEventListener('blur', () => {
-                if (field.hasAttribute('required') && !field.value.trim()) {
-                    field.classList.add('border-red-500');
-                    const feedback = field.parentNode.querySelector('.invalid-feedback');
-                    if (feedback) feedback.classList.remove('hidden');
-                } else {
-                    field.classList.remove('border-red-500');
-                    const feedback = field.parentNode.querySelector('.invalid-feedback');
-                    if (feedback) feedback.classList.add('hidden');
-                }
-            });
-        });
-
-        // Auto-calculate total price
-        const quantityField = document.getElementById('quantity');
-        const priceField = document.getElementById('price');
-        
-        function updateTotal() {
-            const quantity = parseInt(quantityField.value) || 0;
-            const price = parseInt(priceField.value) || 0;
-            const total = quantity * price;
-            
-            // You can display this total somewhere in the form
-            console.log('Total:', total.toLocaleString('id-ID'));
-        }
-        
-        quantityField.addEventListener('input', updateTotal);
-        priceField.addEventListener('input', updateTotal);
-
-        // Set default date to today
-        document.getElementById('orderDate').valueAsDate = new Date();
-
-        // Notification system
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg text-white transition-all duration-300 transform translate-x-full ${
-                type === 'success' ? 'bg-green-500' : 
-                type === 'error' ? 'bg-red-500' : 
-                type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
-            }`;
-            
-            notification.innerHTML = `
-                <div class="flex items-center">
-                    <i class="fas ${
-                        type === 'success' ? 'fa-check-circle' : 
-                        type === 'error' ? 'fa-exclamation-circle' : 
-                        type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'
-                    } mr-2"></i>
-                    <span>${message}</span>
-                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Animate in
-            setTimeout(() => {
-                notification.classList.remove('translate-x-full');
-            }, 100);
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                notification.classList.add('translate-x-full');
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.remove();
-                    }
-                }, 300);
-            }, 5000);
-        }
-
-        // Add click animation to buttons
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                let ripple = document.createElement('span');
-                ripple.classList.add('ripple');
-                this.appendChild(ripple);
-
-                let x = e.clientX - e.target.offsetLeft;
-                let y = e.clientY - e.target.offsetTop;
-
-                ripple.style.left = `${x}px`;
-                ripple.style.top = `${y}px`;
-
-                setTimeout(() => {
-                    ripple.remove();
-                }, 300);
-            });
-        });
-        document.addEventListener('DOMContentLoaded', function () {
-    const logoutLink = document.querySelector('a[href="{{ url_for("logout") }}"]');
-
-    if (logoutLink) {
-        logoutLink.addEventListener('click', function (e) {
-            e.preventDefault(); // mencegah navigasi langsung
+        // ✅ SweetAlert2 Logout Confirmation
+        function confirmLogout(event) {
+            event.preventDefault(); // cegah langsung redirect
 
             Swal.fire({
-                title: 'Sign Out?',
-                text: "Apakah kamu yakin ingin keluar?",
+                title: 'Apakah Anda yakin?',
+                text: "Anda akan logout dari sistem.",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, keluar',
+                confirmButtonText: 'Ya, Logout',
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Lanjutkan logout
-                    window.location.href = logoutLink.href;
+                    window.location.href = event.target.href;
                 }
             });
-        });
-    }
-});
+        }
+        // Function untuk mengubah ukuran peta
+        function changeMapSize(size) {
+            const mapElement = document.getElementById('map');
+            
+            switch(size) {
+                case 'small':
+                    mapElement.style.height = '250px';
+                    break;
+                case 'medium':
+                    mapElement.style.height = '350px';
+                    break;
+                case 'large':
+                    mapElement.style.height = '450px';
+                    break;
+            }
+            
+            // Refresh map size
+            setTimeout(() => {
+                if (map) {
+                    map.invalidateSize();
+                }
+            }, 300);
+        }
+    </script>
+    <!-- Simpan data regions sebagai JSON murni -->
+    <script id="regions-data" type="application/json">
+    {{ regions|tojson|safe }}
     </script>
 
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Inisialisasi peta (center Indonesia)
+        var map = L.map('map').setView([-2.5489, 118.0149], 5);
+
+        // Basemap OSM
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        // Ambil JSON murni dari script tag
+        var regions = JSON.parse(document.getElementById("regions-data").textContent);
+
+        // Tambahkan marker
+        regions.forEach(function(region) {
+            if (region.latitude && region.longitude) {
+                L.marker([region.latitude, region.longitude])
+                    .addTo(map)
+                    .bindPopup(`<b>${region.name}</b><br>${region.type}`);
+            }
+        });
+    });
+    </script>
+
+
     <style>
+         #map { height: 500px; border-radius: 1rem; }
+        /* Ripple button animation */
         .ripple {
             position: absolute;
             border-radius: 50%;
@@ -696,38 +305,21 @@
             animation: ripple 0.3s linear;
             background-color: rgba(255, 255, 255, 0.3);
         }
-
         @keyframes ripple {
             to {
                 transform: scale(4);
                 opacity: 0;
             }
         }
-
         button {
             position: relative;
             overflow: hidden;
         }
-
         /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
     </style>
 </body>
 </html>

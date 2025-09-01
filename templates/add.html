@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel Dashboard</title>
+    
+    <!-- External CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="{{ url_for('static', filename='assets/imgs/logo.ico') }}" type="image/x-icon"/>
+    
+    <!-- External JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -22,14 +30,13 @@
             }
         }
     </script>
-    <!-- SweetAlert2 CDN -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
+
 <body class="bg-gray-50 font-sans">
     <!-- Sidebar -->
     <div id="sidebar" class="fixed left-0 top-0 w-64 h-full bg-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50">
         <div class="p-6">
+            <!-- Logo Section -->
             <div class="flex items-center space-x-3 mb-8" data-aos="fade-down">
                 <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
                     <img src="{{ url_for('static', filename='assets/imgs/logo.png') }}" alt="Logo" class="w-6 h-6 object-contain">
@@ -37,6 +44,7 @@
                 <h1 class="text-xl font-bold">AdminPanel</h1>
             </div>
             
+            <!-- Navigation -->
             <nav class="space-y-2">
                 <a href="{{ url_for('dashboard') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="100">
                     <i class="fas fa-home"></i>
@@ -58,267 +66,311 @@
         </div>
     </div>
 
-    <!-- Overlay untuk mobile -->
+    <!-- Mobile Overlay -->
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
 
     <!-- Main Content -->
     <div class="lg:ml-64 min-h-screen">
         <!-- Header -->
         <header class="bg-white shadow-sm border-b">
-            <div class="flex items-center justify-between p-4">
-                <div class="flex items-center space-x-4">
+            <div class="flex flex-wrap items-center justify-between p-4 gap-2">
+                <!-- Left Section -->
+                <div class="flex items-center space-x-3">
                     <button id="sidebarToggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
                         <i class="fas fa-bars text-gray-600"></i>
                     </button>
                     <h2 class="text-2xl font-bold text-gray-800" data-aos="fade-down">Portfolio Dashboard</h2>
                 </div>
                 
-                <div class="flex items-center space-x-4">
-                    <div class="relative hidden md:block" data-aos="fade-down" data-aos-delay="100">
-                        <input type="text" placeholder="Cari..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-primary">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                <!-- Right Section -->
+                <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <!-- Search Bar -->
+                    <div class="relative flex-1 sm:flex-none" data-aos="fade-down" data-aos-delay="100">
+                        <form method="GET" action="{{ url_for('portfolio') }}" class="mb-0">
+                            <div class="relative w-full md:w-64">
+                                <input 
+                                    type="text" 
+                                    name="q" 
+                                    id="searchInput"
+                                    value="{{ request.args.get('q', '') }}"
+                                    placeholder="Cari..." 
+                                    class="pl-10 pr-10 h-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-full text-sm"
+                                    oninput="toggleClearBtn()"
+                                >
+                                <!-- Search Icon -->
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                                <!-- Clear Button -->
+                                <button
+                                    type="button"
+                                    id="clearBtn"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors duration-200"
+                                    style="display: none;"
+                                    onclick="clearSearch()"
+                                    aria-label="Clear search"
+                                >
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    
-                    <!-- <div class="flex items-center space-x-3" data-aos="fade-down" data-aos-delay="300">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile" class="w-8 h-8 rounded-full">
-                        <span class="hidden md:block text-gray-700 font-medium">John Doe</span>
-                        <i class="fas fa-chevron-down text-gray-400"></i>
-                    </div> -->
-                   <!-- Container -->
-                <div class="relative" x-data="{ open: false }" data-aos="fade-down" data-aos-delay="300">
-                <!-- Trigger -->
-                <div class="flex items-center space-x-3 cursor-pointer" @click="open = !open">
-                    <img  src="{{ url_for('static', filename='assets/imgs/profile-picture.png') }}" alt="Profile" class="w-8 h-8 rounded-full object-cover">
-                    <span class="hidden md:block text-gray-700 font-medium">
-                    {{ user.name }}
-                    </span>
-                    <i class="fas fa-chevron-down text-gray-400"></i>
-                </div>
 
-                <!-- Dropdown -->
-                <div x-show="open"  @click.away="open = false" x-transition class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50">
-                    <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    Sign Out
-                    </a>
-                </div>
+                    <!-- User Dropdown -->
+                    <div x-data="{ open: false }" class="relative flex items-center space-x-2 sm:space-x-3 pl-3 sm:pl-4 border-l border-gray-200 cursor-pointer" data-aos="fade-left" data-aos-delay="200">
+                        <!-- Avatar -->
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
+                            {{ user.name[0]|upper }}{{ user.name[1]|upper }}
+                        </div>
+
+                        <!-- Username -->
+                        <div class="hidden sm:block">
+                            <p class="text-xs sm:text-sm font-medium text-gray-700 truncate max-w-[80px] lg:max-w-none">
+                                {{ user.name }}
+                            </p>
+                            <p class="hidden sm:block text-xs text-gray-500">Administrator</p>
+                        </div>
+
+                        <!-- Arrow -->
+                        <i class="fas fa-chevron-down text-gray-400 text-sm transition-transform duration-200"
+                           :class="{ 'rotate-180': open }"
+                           @click="open = !open">
+                        </i>
+
+                        <!-- Dropdown Menu -->
+                        <div x-show="open" @click.outside="open = false"
+                             x-transition
+                             class="absolute top-full right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                            <a href="{{ url_for('logout') }}" 
+                               class="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                               onclick="confirmLogout(event)">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- Dashboard Content -->
+        <!-- Main Dashboard Content -->
         <main class="p-6 max-w-7xl mx-auto">
-            <!-- Add New Form -->
+            <!-- Add New Portfolio Form -->
             <div id="addForm" class="bg-white rounded-xl shadow-sm border mb-8 hidden" data-aos="fade-up" data-aos-delay="600">
+                <!-- Form Header -->
                 <div class="p-6 border-b">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-gray-800">Tambah Portofolio Baru</h3>
-                    <button id="closeForm" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                    <i class="fas fa-times text-gray-500"></i>
-                    </button>
-                </div>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-800">Tambah Portofolio Baru</h3>
+                        <button id="closeForm" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                            <i class="fas fa-times text-gray-500"></i>
+                        </button>
+                    </div>
                 </div>
 
+                <!-- Form Content -->
                 <form class="p-6" id="portfolioForm" method="POST" action="{{ url_for('add_portfolio') }}" enctype="multipart/form-data">
-                <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Info Project -->
-                    <div class="space-y-4">
-                    <h4 class="text-md font-semibold text-gray-700 border-b pb-2">Informasi Portofolio</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left Column - Project Info -->
+                        <div class="space-y-4">
+                            <h4 class="text-md font-semibold text-gray-700 border-b pb-2">Informasi Portofolio</h4>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Judul Portofolio </label>
-                        <input type="text" name="judul" required class="w-full px-4 py-3 border rounded-lg" placeholder="Judul portofolio">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Judul Portofolio</label>
+                                <input type="text" name="judul" required class="w-full px-4 py-3 border rounded-lg" placeholder="Judul portofolio">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Klien</label>
+                                <input type="text" name="klien" required class="w-full px-4 py-3 border rounded-lg" placeholder="Nama klien">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Durasi Proyek</label>
+                                <input type="text" name="durasi" required class="w-full px-4 py-3 border rounded-lg" placeholder="Contoh: Maret - Oktober 2024">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Upload Video</label>
+                                <input type="file" name="video_file" accept="video/*" class="w-full px-4 py-3 border rounded-lg">
+                            </div>
+                        </div>
+
+                        <!-- Right Column - Description & Others -->
+                        <div class="space-y-4">
+                            <h4 class="text-md font-semibold text-gray-700 border-b pb-2">Detail Lainnya</h4>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi *</label>
+                                <textarea name="deskripsi" rows="5" required class="w-full px-4 py-3 border rounded-lg"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Fitur Utama (1 baris 1 poin)</label>
+                                <textarea name="fitur_utama" rows="4" class="w-full px-4 py-3 border rounded-lg" placeholder="Contoh:
+- Autentikasi
+- Dashboard Analytics
+- Export PDF"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Teknologi (pisahkan koma)</label>
+                                <input type="text" name="teknologi" class="w-full px-4 py-3 border rounded-lg">
+                            </div>
+                        </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Klien </label>
-                        <input type="text" name="klien" required class="w-full px-4 py-3 border rounded-lg" placeholder="Nama klien">
+                    <!-- Form Actions -->
+                    <div class="flex flex-col md:flex-row gap-4 mt-6 pt-4 border-t">
+                        <button type="submit"
+                                class="flex-1 bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium">
+                            <i class="fas fa-save mr-2"></i>Simpan Portofolio
+                        </button>
+                        <button type="reset"
+                                class="flex-1 border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                            <i class="fas fa-redo mr-2"></i>Reset
+                        </button>
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Durasi Proyek </label>
-                        <input type="text" name="durasi" required class="w-full px-4 py-3 border rounded-lg" placeholder="Contoh: Maret - Oktober 2024">
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Upload Video </label>
-                        <input type="file" name="video_file" accept="video/*" class="w-full px-4 py-3 border rounded-lg">
-                    </div>
-                    </div>
-
-                    <!-- Deskripsi & Lainnya -->
-                    <div class="space-y-4">
-                    <h4 class="text-md font-semibold text-gray-700 border-b pb-2">Detail Lainnya</h4>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Deskripsi *</label>
-                        <textarea name="deskripsi" rows="5" required class="w-full px-4 py-3 border rounded-lg"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Fitur Utama (1 baris 1 poin)</label>
-                        <textarea name="fitur_utama" rows="4" class="w-full px-4 py-3 border rounded-lg" placeholder="Contoh:
-            - Autentikasi
-            - Dashboard Analytics
-            - Export PDF"></textarea>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Teknologi (pisahkan koma)</label>
-                        <input type="text" name="teknologi" class="w-full px-4 py-3 border rounded-lg">
-                    </div>
-                    </div>
-                </div>
-
-                <!-- Tombol -->
-                <div class="flex flex-col md:flex-row gap-4 mt-6 pt-4 border-t">
-                    <button type="submit"
-                    class="flex-1 bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium">
-                    <i class="fas fa-save mr-2"></i>Simpan Portofolio
-                    </button>
-                    <button type="reset"
-                    class="flex-1 border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-                    <i class="fas fa-redo mr-2"></i>Reset
-                    </button>
-                </div>
                 </form>
             </div>
 
-            <!-- Data Table -->
+            <!-- Data Table Section -->
             <div class="bg-white rounded-xl shadow-sm border" data-aos="fade-up" data-aos-delay="700">
+                <!-- Table Header -->
                 <div class="p-6 border-b">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 md:mb-0">Portofolio Terbaru</h3>
-                    <div class="flex flex-wrap gap-2">
-                    <button id="showAddForm" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Tambah
-                    </button>
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 md:mb-0">Portofolio Terbaru</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="showAddForm" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                <i class="fas fa-plus mr-2"></i>Tambah
+                            </button>
+                        </div>
                     </div>
                 </div>
-                </div>
 
+                <!-- Table Content -->
                 <div class="w-full overflow-x-auto">
-                <table class="min-w-full">
-                    <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul Portofolio</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Klien</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fitur Utama</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durasi</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Video</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                    {% for project in projects %}
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {{ loop.index }}
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ project.judul }}
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ project.klien }}
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-normal break-words text-sm text-gray-900">
-                        {{ project.deskripsi }}
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-normal break-words text-sm text-gray-900">
-                        <ul class="list-disc pl-5">
-                            {% for point in project.fitur_utama.split('\n') %}
-                            {% if point.strip() %}
-                            <li>{{ point }}</li>
-                            {% endif %}
+                    <table class="min-w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Judul Portofolio</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Klien</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fitur Utama</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durasi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Video</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for project in projects %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ loop.index }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ project.judul }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ project.klien }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-normal break-words text-sm text-gray-900">
+                                    {{ project.deskripsi }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-normal break-words text-sm text-gray-900">
+                                    <ul class="list-disc pl-5">
+                                        {% for point in project.fitur_utama.split('\n') %}
+                                        {% if point.strip() %}
+                                        <li>{{ point }}</li>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {{ project.durasi }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    <video class="w-full max-w-[200px] h-auto" controls>
+                                        <source src="{{ url_for('static', filename=project.video_path) }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        Tersimpan
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="{{ url_for('edit_portfolio', id=project.id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
+                                    <form action="{{ url_for('delete_portfolio', id=project.id) }}" method="POST" style="display:inline;" onsubmit="return confirmDelete(event)">
+                                        <button type="submit" id="deleteBtn" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-4 py-2 rounded transition-colors">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
                             {% endfor %}
-                        </ul>
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ project.durasi }}
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <video class="w-full max-w-[200px] h-auto" controls>
-                            <source src="{{ url_for('static', filename=project.video_path) }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                            Tersimpan
-                        </span>
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <!-- <button class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                        <button class="text-red-600 hover:text-red-900">Hapus</button> -->
-                         <a href="{{ url_for('edit_portfolio', id=project.id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                        <!-- <form action="{{ url_for('delete_portfolio', id=project.id) }}" method="POST" style="display:inline;">
-                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('Yakin mau hapus?')">Hapus</button>
-                        </form> -->
-                        <form id="deleteForm" action="{{ url_for('delete_portfolio', id=project.id) }}" method="POST" style="display:inline;">
-                            <button type="button" id="deleteBtn" class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-4 py-2 rounded transition-colors">
-                                Hapus
-                            </button>
-                        </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
                 </div>
 
+                <!-- Pagination -->
                 <div class="px-6 py-3 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div class="text-sm text-gray-700">
-                    Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">3</span> dari <span class="font-medium">97</span> hasil
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <button class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">Sebelumnya</button>
-                    <button class="px-3 py-1 bg-primary text-white text-sm rounded-md">1</button>
-                    <button class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">2</button>
-                    <button class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">3</button>
-                    <button class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">Selanjutnya</button>
-                </div>
+                    <div class="text-sm text-gray-700">
+                        Menampilkan <span class="font-medium">{{ start }}</span> sampai 
+                        <span class="font-medium">{{ end }}</span> dari 
+                        <span class="font-medium">{{ total }}</span> hasil
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        {% if page > 1 %}
+                            <a href="{{ url_for('portfolio', page=page-1) }}"
+                               class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">Sebelumnya</a>
+                        {% endif %}
+
+                        {% for p in range(1, (total // per_page) + (1 if total % per_page else 0) + 1) %}
+                            <a href="{{ url_for('portfolio', page=p) }}"
+                               class="px-3 py-1 text-sm rounded-md {% if p == page %}bg-blue-600 text-white{% else %}border border-gray-300 hover:bg-gray-50{% endif %}">
+                                {{ p }}
+                            </a>
+                        {% endfor %}
+
+                        {% if page * per_page < total %}
+                            <a href="{{ url_for('portfolio', page=page+1) }}"
+                               class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">Selanjutnya</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </main>
-
     </div>
 
-    <!-- Pastikan Alpine.js di-load -->
-<script src="//unpkg.com/alpinejs" defer></script>
+    <!-- JavaScript -->
     <script>
-        // Initialize AOS
+        // Initialize AOS Animation
         AOS.init({
             duration: 800,
             once: true,
             offset: 100
         });
 
-        // Sidebar toggle
+        // ===== SIDEBAR FUNCTIONALITY =====
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
 
+        // Toggle sidebar on mobile
         sidebarToggle.addEventListener('click', () => {
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
         });
 
+        // Close sidebar when clicking overlay
         overlay.addEventListener('click', () => {
             sidebar.classList.add('-translate-x-full');
             overlay.classList.add('hidden');
         });
 
-        // Auto-close sidebar on resize if screen becomes large
+        // Auto-close sidebar on resize for larger screens
         window.addEventListener('resize', () => {
             if (window.innerWidth >= 1024) {
                 sidebar.classList.remove('-translate-x-full');
@@ -328,6 +380,204 @@
             }
         });
 
+        // ===== PORTFOLIO FORM FUNCTIONALITY =====
+        const showAddFormBtn = document.getElementById('showAddForm');
+        const addForm = document.getElementById('addForm');
+        const closeFormBtn = document.getElementById('closeForm');
+        const portfolioForm = document.getElementById('portfolioForm');
+
+        // Show form
+        showAddFormBtn.addEventListener('click', () => {
+            addForm.classList.remove('hidden');
+            addForm.scrollIntoView({ behavior: 'smooth' });
+            AOS.refresh();
+        });
+
+        // Close form
+        closeFormBtn.addEventListener('click', () => {
+            addForm.classList.add('hidden');
+        });
+
+        // Form submission with validation
+        portfolioForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            // Basic validation
+            let valid = true;
+            const formFields = portfolioForm.querySelectorAll('input[required], textarea[required]');
+            
+            formFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('border-red-500');
+                    valid = false;
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+
+            if (!valid) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Isi semua field wajib!',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            // Show confirmation dialog
+            Swal.fire({
+                title: 'Yakin Simpan?',
+                text: 'Pastikan data sudah benar!',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const submitBtn = portfolioForm.querySelector('button[type="submit"]');
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
+                    submitBtn.disabled = true;
+                    portfolioForm.submit();
+                }
+            });
+        });
+
+        // Form reset
+        portfolioForm.addEventListener('reset', () => {
+            const fields = portfolioForm.querySelectorAll('input, textarea');
+            fields.forEach(field => {
+                field.classList.remove('border-red-500');
+                const feedback = field.parentNode.querySelector('.invalid-feedback');
+                if (feedback) feedback.classList.add('hidden');
+            });
+        });
+
+        // Real-time validation
+        const formFields = portfolioForm.querySelectorAll('input[required], textarea[required]');
+        formFields.forEach(field => {
+            field.addEventListener('blur', () => {
+                if (!field.value.trim()) {
+                    field.classList.add('border-red-500');
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+        });
+
+        // ===== SEARCH FUNCTIONALITY =====
+        function toggleClearButton() {
+            const input = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearBtn');
+            
+            if (input.value.trim() !== '') {
+                clearBtn.style.display = 'block';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+        }
+
+        function clearSearch() {
+            window.location.href = "{{ url_for('portfolio') }}";
+        }
+
+        // Search input event listener
+        document.getElementById('searchInput').addEventListener('input', toggleClearButton);
+
+        // Show clear button on page load if search is not empty
+        window.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearBtn');
+            if (input.value.trim() !== '') {
+                clearBtn.style.display = 'block';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+        });
+
+        // ===== CONFIRMATION DIALOGS =====
+        
+        // Logout confirmation
+        function confirmLogout(event) {
+            event.preventDefault();
+
+            Swal.fire({
+                title: 'Yakin mau logout?',
+                text: "Anda akan keluar dari sesi ini",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3B82F6',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Logout...',
+                        text: 'Sedang memproses',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        timer: 1200
+                    });
+
+                    setTimeout(() => {
+                        window.location.href = "{{ url_for('logout') }}";
+                    }, 1200);
+                }
+            });
+        }
+
+        // Delete confirmation function
+        function confirmDelete(event) {
+            event.preventDefault();
+            const form = event.target;
+            
+            Swal.fire({
+                title: 'Yakin mau hapus?',
+                text: "Data yang dihapus tidak bisa dikembalikan!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Menghapus...',
+                        text: 'Sedang memproses',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        timer: 1000
+                    });
+                    
+                    setTimeout(() => {
+                        form.submit();
+                    }, 1000);
+                }
+            });
+            
+            return false;
+        }
+
+        // Test SweetAlert when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('SweetAlert loaded:', typeof Swal !== 'undefined');
+            
+            // Test button for debugging (remove in production)
+            if (window.location.search.includes('test=1')) {
+                Swal.fire({
+                    title: 'Test SweetAlert',
+                    text: 'SweetAlert is working!',
+                    icon: 'success'
+                });
+            }
+        });
+
+        // ===== UI ENHANCEMENTS =====
         // Add hover effects to table rows
         const tableRows = document.querySelectorAll('tbody tr');
         tableRows.forEach(row => {
@@ -340,91 +590,6 @@
                 row.style.transform = 'scale(1)';
             });
         });
-
-       // === Add Portfolio Form ===
-const showAddFormBtn = document.getElementById('showAddForm');
-const addForm = document.getElementById('addForm');
-const closeFormBtn = document.getElementById('closeForm');
-const portfolioForm = document.getElementById('portfolioForm');
-
-// Show form
-showAddFormBtn.addEventListener('click', () => {
-  addForm.classList.remove('hidden');
-  addForm.scrollIntoView({ behavior: 'smooth' });
-  AOS.refresh();
-});
-
-// Close form
-closeFormBtn.addEventListener('click', () => {
-  addForm.classList.add('hidden');
-});
-
-// === Optional: Form reset ===
-portfolioForm.addEventListener('reset', () => {
-  const fields = portfolioForm.querySelectorAll('input, textarea');
-  fields.forEach(field => {
-    field.classList.remove('border-red-500');
-    const feedback = field.parentNode.querySelector('.invalid-feedback');
-    if (feedback) feedback.classList.add('hidden');
-  });
-});
-
-// === SweetAlert + Submit ===
-portfolioForm.addEventListener('submit', (e) => {
-  e.preventDefault(); // stop submit dulu
-
-  // Validasi basic (opsional)
-  let valid = true;
-  const formFields = portfolioForm.querySelectorAll('input[required], textarea[required]');
-  formFields.forEach(field => {
-    if (!field.value.trim()) {
-      field.classList.add('border-red-500');
-      valid = false;
-    } else {
-      field.classList.remove('border-red-500');
-    }
-  });
-
-  if (!valid) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Isi semua field wajib!',
-      timer: 2000,
-      showConfirmButton: false
-    });
-    return;
-  }
-
-  // Tampilkan konfirmasi SweetAlert
-  Swal.fire({
-    title: 'Yakin Simpan?',
-    text: 'Pastikan data sudah benar!',
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonText: 'Simpan',
-    cancelButtonText: 'Batal'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const submitBtn = portfolioForm.querySelector('button[type="submit"]');
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
-      submitBtn.disabled = true;
-
-      portfolioForm.submit(); // lanjut submit ke server Flask
-    }
-  });
-});
-
-// === Real-time validation ===
-const formFields = portfolioForm.querySelectorAll('input[required], textarea[required]');
-formFields.forEach(field => {
-  field.addEventListener('blur', () => {
-    if (!field.value.trim()) {
-      field.classList.add('border-red-500');
-    } else {
-      field.classList.remove('border-red-500');
-    }
-  });
-});
 
         // Add click animation to buttons
         const buttons = document.querySelectorAll('button');
@@ -445,41 +610,11 @@ formFields.forEach(field => {
                 }, 300);
             });
         });
-
-        document.getElementById('deleteBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            Swal.fire({
-                title: 'Yakin mau hapus?',
-                text: "Data yang dihapus tidak bisa dikembalikan!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#dc2626',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal',
-                reverseButtons: true,
-                focusCancel: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Submit form jika user konfirmasi
-                    document.getElementById('deleteForm').submit();
-                    
-                    // Optional: tampilkan loading atau success message
-                    Swal.fire({
-                        title: 'Menghapus...',
-                        text: 'Sedang memproses penghapusan data',
-                        icon: 'info',
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            });
-        });
     </script>
 
+    <!-- Custom Styles -->
     <style>
+        /* Ripple Effect */
         .ripple {
             position: absolute;
             border-radius: 50%;
@@ -500,7 +635,7 @@ formFields.forEach(field => {
             overflow: hidden;
         }
 
-        /* Custom scrollbar */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;

@@ -4,11 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel Dashboard</title>
+    
+    <!-- External CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="{{ url_for('static', filename='assets/imgs/logo.ico') }}" type="image/x-icon"/>
+    
+    <!-- External JS -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -22,13 +30,12 @@
             }
         }
     </script>
-    <!-- SweetAlert2 CDN -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
+
 <body class="bg-gray-50 font-sans">
-    <!-- Sidebar -->
+    <!-- ========== SIDEBAR ========== -->
     <div id="sidebar" class="fixed left-0 top-0 w-64 h-full bg-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50">
+        <!-- Logo Section -->
         <div class="p-6">
             <div class="flex items-center space-x-3 mb-8" data-aos="fade-down">
                 <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
@@ -37,7 +44,8 @@
                 <h1 class="text-xl font-bold">AdminPanel</h1>
             </div>
             
-             <nav class="space-y-2">
+            <!-- Navigation Menu -->
+            <nav class="space-y-2">
                 <a href="{{ url_for('dashboard') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="100">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
@@ -58,14 +66,15 @@
         </div>
     </div>
 
-    <!-- Overlay untuk mobile -->
+    <!-- Mobile Overlay -->
     <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
 
-    <!-- Main Content -->
+    <!-- ========== MAIN CONTENT ========== -->
     <div class="lg:ml-64 min-h-screen">
         <!-- Header -->
         <header class="bg-white shadow-sm border-b">
             <div class="flex items-center justify-between p-4">
+                <!-- Left Header Section -->
                 <div class="flex items-center space-x-4">
                     <button id="sidebarToggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
                         <i class="fas fa-bars text-gray-600"></i>
@@ -73,40 +82,54 @@
                     <h2 class="text-2xl font-bold text-gray-800" data-aos="fade-down">Portfolio Dashboard</h2>
                 </div>
                 
+                <!-- Right Header Section -->
                 <div class="flex items-center space-x-4">
+                    <!-- Search Bar -->
                     <div class="relative hidden md:block" data-aos="fade-down" data-aos-delay="100">
                         <input type="text" placeholder="Cari..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-primary">
                         <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
                     </div>
                     
-                    <!-- <div class="flex items-center space-x-3" data-aos="fade-down" data-aos-delay="300">
-                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="Profile" class="w-8 h-8 rounded-full">
-                        <span class="hidden md:block text-gray-700 font-medium">John Doe</span>
-                        <i class="fas fa-chevron-down text-gray-400"></i>
-                    </div> -->
-                   <!-- Container -->
-                <div class="relative" x-data="{ open: false }" data-aos="fade-down" data-aos-delay="300">
-                <!-- Trigger -->
-                <div class="flex items-center space-x-3 cursor-pointer" @click="open = !open">
-                    <img  src="{{ url_for('static', filename='assets/imgs/profile-picture.png') }}" alt="Profile" class="w-8 h-8 rounded-full object-cover">
-                    <span class="hidden md:block text-gray-700 font-medium">
-                    {{ user.name }}
-                    </span>
-                    <i class="fas fa-chevron-down text-gray-400"></i>
-                </div>
+                    <!-- User Profile Dropdown -->
+                    <div class="flex items-center space-x-3">
+                        <div x-data="{ open: false }" class="relative flex items-center space-x-3 pl-4 border-l border-gray-200 cursor-pointer" data-aos="fade-left" data-aos-delay="200">
+                            <!-- Avatar -->
+                            <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold animate-float">
+                                {{ user.name[0]|upper }}{{ user.name[1]|upper }}
+                            </div>
 
-                <!-- Dropdown -->
-                <div x-show="open"  @click.away="open = false" x-transition class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50">
-                    <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    Sign Out
-                    </a>
-                </div>
+                            <!-- Username -->
+                            <div class="hidden sm:block">
+                                <p class="text-xs sm:text-sm font-medium text-gray-700 truncate max-w-[80px] lg:max-w-none">
+                                    {{ user.name }}
+                                </p>
+                                <p class="hidden sm:block text-xs text-gray-500">Administrator</p>
+                            </div>
+                            
+                            <!-- Dropdown Arrow -->
+                            <i class="fas fa-chevron-down text-gray-400 text-sm transition-transform duration-200"
+                               :class="{ 'rotate-180': open }"
+                               @click="open = !open"></i>
+
+                            <!-- Dropdown Menu -->
+                            <div x-show="open" @click.outside="open = false"
+                                 x-transition
+                                 class="absolute top-full right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                                <a href="{{ url_for('logout') }}" 
+                                   class="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                                   onclick="confirmLogout(event)">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content Area -->
-         <main class="p-6 max-w-7xl mx-auto">
+        <!-- ========== MAIN CONTENT AREA ========== -->
+        <main class="p-6 max-w-7xl mx-auto">
+            <!-- Breadcrumb Navigation -->
             <div class="mb-6" data-aos="fade-right">
                 <nav class="flex" aria-label="Breadcrumb">
                     <ol class="flex items-center space-x-2">
@@ -119,198 +142,204 @@
                 </nav>
             </div>
 
+            <!-- ========== PROJECT UPDATE FORM ========== -->
             <form method="POST" enctype="multipart/form-data" id="projectForm" class="p-8 space-y-6">
-                    <!-- Two Column Layout -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Left Column -->
-                        <div class="space-y-6">
-                            <!-- Project Title -->
-                            <div class="space-y-2" data-aos="fade-right" data-aos-delay="300">
-                                <label for="judul" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
-                                    <i class="fas fa-project-diagram mr-2 text-blue-500"></i>
-                                    Project Title
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="judul" 
-                                    id="judul"
-                                    value="{{ project.judul }}" 
-                                    required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring focus:ring-blue-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
-                                    placeholder="Enter your project title"
-                                >
-                            </div>
-
-                            <!-- Client Name -->
-                            <div class="space-y-2" data-aos="fade-right" data-aos-delay="400">
-                                <label for="klien" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
-                                    <i class="fas fa-user-tie mr-2 text-purple-500"></i>
-                                    Client Name
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="klien" 
-                                    id="klien"
-                                    value="{{ project.klien }}" 
-                                    required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
-                                    placeholder="Enter client name"
-                                >
-                            </div>
-
-                            <!-- Duration -->
-                            <div class="space-y-2" data-aos="fade-right" data-aos-delay="500">
-                                <label for="durasi" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
-                                    <i class="fas fa-clock mr-2 text-orange-500"></i>
-                                    Duration
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="durasi" 
-                                    id="durasi"
-                                    value="{{ project.durasi }}" 
-                                    required
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring focus:ring-orange-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
-                                    placeholder="e.g., March - October 2024"
-                                >
-                            </div>
-
-                            <!-- File Upload -->
-                            <div class="space-y-2" data-aos="fade-right" data-aos-delay="600">
-                                <label for="video_file" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
-                                    <i class="fas fa-video mr-2 text-red-500"></i>
-                                    Video File
-                                </label>
-                                <div class="relative">
-                                    <input 
-                                        type="file" 
-                                        name="video_file" 
-                                        id="video_file"
-                                        accept="video/*"
-                                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring focus:ring-red-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
-                                    >
-                                </div>
-                                <p class="text-xs text-gray-500 mt-1">
-                                    <i class="fas fa-info-circle mr-1"></i>
-                                    Supported formats: MP4, AVI, MOV, WMV (Max size: 100MB)
-                                </p>
-                            </div>
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <!-- ===== LEFT COLUMN ===== -->
+                    <div class="space-y-6">
+                        <!-- Project Title -->
+                        <div class="space-y-2" data-aos="fade-right" data-aos-delay="300">
+                            <label for="judul" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
+                                <i class="fas fa-project-diagram mr-2 text-blue-500"></i>
+                                Project Title
+                            </label>
+                            <input 
+                                type="text" 
+                                name="judul" 
+                                id="judul"
+                                value="{{ project.judul }}" 
+                                required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring focus:ring-blue-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
+                                placeholder="Enter your project title"
+                            >
                         </div>
 
-                        <!-- Right Column -->
-                        <div class="space-y-6">
-                            <!-- Description -->
-                            <div class="space-y-2" data-aos="fade-left" data-aos-delay="300">
-                                <label for="deskripsi" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
-                                    <i class="fas fa-align-left mr-2 text-green-500"></i>
-                                    Description
-                                </label>
-                                <textarea 
-                                    name="deskripsi" 
-                                    id="deskripsi"
-                                    rows="5"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring focus:ring-green-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300 resize-none"
-                                    placeholder="Describe your project..."
-                                >{{ project.deskripsi }}</textarea>
-                            </div>
+                        <!-- Client Name -->
+                        <div class="space-y-2" data-aos="fade-right" data-aos-delay="400">
+                            <label for="klien" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
+                                <i class="fas fa-user-tie mr-2 text-purple-500"></i>
+                                Client Name
+                            </label>
+                            <input 
+                                type="text" 
+                                name="klien" 
+                                id="klien"
+                                value="{{ project.klien }}" 
+                                required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:ring focus:ring-purple-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
+                                placeholder="Enter client name"
+                            >
+                        </div>
 
-                            <!-- Main Features -->
-                            <div class="space-y-2" data-aos="fade-left" data-aos-delay="400">
-                                <label for="fitur_utama" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
-                                    <i class="fas fa-star mr-2 text-yellow-500"></i>
-                                    Main Features
-                                </label>
-                                <textarea 
-                                    name="fitur_utama" 
-                                    id="fitur_utama"
-                                    rows="5"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:ring focus:ring-yellow-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300 resize-none"
-                                    placeholder="List the main features (one per line)&#10;Example:&#10;- Authentication System&#10;- Dashboard Analytics&#10;- PDF Export"
-                                >{{ project.fitur_utama }}</textarea>
-                            </div>
+                        <!-- Duration -->
+                        <div class="space-y-2" data-aos="fade-right" data-aos-delay="500">
+                            <label for="durasi" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
+                                <i class="fas fa-clock mr-2 text-orange-500"></i>
+                                Duration
+                            </label>
+                            <input 
+                                type="text" 
+                                name="durasi" 
+                                id="durasi"
+                                value="{{ project.durasi }}" 
+                                required
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:ring focus:ring-orange-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
+                                placeholder="e.g., March - October 2024"
+                            >
+                        </div>
 
-                            <!-- Features -->
-                            <!-- <div class="space-y-2" data-aos="fade-left" data-aos-delay="500">
-                                <label for="fitur" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
-                                    <i class="fas fa-list mr-2 text-indigo-500"></i>
-                                    Features (comma separated)
-                                </label>
+                        <!-- File Upload -->
+                        <div class="space-y-2" data-aos="fade-right" data-aos-delay="600">
+                            <label for="video_file" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
+                                <i class="fas fa-video mr-2 text-red-500"></i>
+                                Video File
+                            </label>
+                            <div class="relative">
                                 <input 
-                                    type="text" 
-                                    name="fitur" 
-                                    id="fitur"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
-                                    placeholder="Feature 1, Feature 2, Feature 3"
+                                    type="file" 
+                                    name="video_file" 
+                                    id="video_file"
+                                    accept="video/*"
+                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-red-500 focus:ring focus:ring-red-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
                                 >
-                            </div> -->
-
-                            <!-- Technology -->
-                            <!-- <div class="space-y-2" data-aos="fade-left" data-aos-delay="600">
-                                <label for="teknologi" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
-                                    <i class="fas fa-code mr-2 text-pink-500"></i>
-                                    Technology (comma separated)
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="teknologi" 
-                                    id="teknologi"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-500 focus:ring focus:ring-pink-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
-                                    placeholder="React, Node.js, MongoDB"
-                                >
-                            </div> -->
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Supported formats: MP4, AVI, MOV, WMV (Max size: 100MB)
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
-                    <div class="flex flex-col md:flex-row gap-4 pt-6 border-t border-gray-200" data-aos="fade-up" data-aos-delay="700">
-                        <button 
-                            type="submit" 
-                            class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 active:scale-[0.98]"
-                        >
-                            <i class="fas fa-save mr-2"></i>
-                            Update Project
-                        </button>
-                        <button 
-                            type="reset"
-                            class="flex-1 border-2 border-gray-300 text-gray-700 font-bold py-4 px-8 rounded-xl hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-gray-200 active:scale-[0.98]"
-                        >
-                            <i class="fas fa-redo mr-2"></i>
-                            Reset Form
-                        </button>
-                        <button 
-                            type="button"
-                            onclick="window.history.back()"
-                            class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-gray-300 active:scale-[0.98]"
-                        >
-                            <i class="fas fa-arrow-left mr-2"></i>
-                            Kembali
-                        </button>
+                    <!-- ===== RIGHT COLUMN ===== -->
+                    <div class="space-y-6">
+                        <!-- Description -->
+                        <div class="space-y-2" data-aos="fade-left" data-aos-delay="300">
+                            <label for="deskripsi" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
+                                <i class="fas fa-align-left mr-2 text-green-500"></i>
+                                Description
+                            </label>
+                            <textarea 
+                                name="deskripsi" 
+                                id="deskripsi"
+                                rows="5"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:ring focus:ring-green-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300 resize-none"
+                                placeholder="Describe your project..."
+                            >{{ project.deskripsi }}</textarea>
+                        </div>
+
+                        <!-- Main Features -->
+                        <div class="space-y-2" data-aos="fade-left" data-aos-delay="400">
+                            <label for="fitur_utama" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
+                                <i class="fas fa-star mr-2 text-yellow-500"></i>
+                                Main Features
+                            </label>
+                            <textarea 
+                                name="fitur_utama" 
+                                id="fitur_utama"
+                                rows="5"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-yellow-500 focus:ring focus:ring-yellow-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300 resize-none"
+                                placeholder="List the main features (one per line)&#10;Example:&#10;- Authentication System&#10;- Dashboard Analytics&#10;- PDF Export"
+                            >{{ project.fitur_utama }}</textarea>
+                        </div>
+
+                        <!-- Commented Features Section -->
+                        <!-- <div class="space-y-2" data-aos="fade-left" data-aos-delay="500">
+                            <label for="fitur" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
+                                <i class="fas fa-list mr-2 text-indigo-500"></i>
+                                Features (comma separated)
+                            </label>
+                            <input 
+                                type="text" 
+                                name="fitur" 
+                                id="fitur"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring focus:ring-indigo-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
+                                placeholder="Feature 1, Feature 2, Feature 3"
+                            >
+                        </div> -->
+
+                        <!-- Commented Technology Section -->
+                        <!-- <div class="space-y-2" data-aos="fade-left" data-aos-delay="600">
+                            <label for="teknologi" class="flex items-center text-gray-700 font-semibold text-sm uppercase tracking-wide">
+                                <i class="fas fa-code mr-2 text-pink-500"></i>
+                                Technology (comma separated)
+                            </label>
+                            <input 
+                                type="text" 
+                                name="teknologi" 
+                                id="teknologi"
+                                class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-pink-500 focus:ring focus:ring-pink-200 transition-all duration-300 bg-white/50 backdrop-blur-sm hover:border-gray-300"
+                                placeholder="React, Node.js, MongoDB"
+                            >
+                        </div> -->
                     </div>
+                </div>
+
+                <!-- ===== ACTION BUTTONS ===== -->
+                <div class="flex flex-col md:flex-row gap-4 pt-6 border-t border-gray-200" data-aos="fade-up" data-aos-delay="700">
+                    <button 
+                        type="submit" 
+                        class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 active:scale-[0.98]"
+                    >
+                        <i class="fas fa-save mr-2"></i>
+                        Update Project
+                    </button>
+                    <button 
+                        type="reset"
+                        class="flex-1 border-2 border-gray-300 text-gray-700 font-bold py-4 px-8 rounded-xl hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-gray-200 active:scale-[0.98]"
+                    >
+                        <i class="fas fa-redo mr-2"></i>
+                        Reset Form
+                    </button>
+                    <button 
+                        type="button"
+                        onclick="window.history.back()"
+                        class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-gray-300 active:scale-[0.98]"
+                    >
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Kembali
+                    </button>
+                </div>
             </form>
-         </main>
-
+        </main>
     </div>
 
-    <!-- Pastikan Alpine.js di-load -->
-<script src="//unpkg.com/alpinejs" defer></script>
+    <!-- Additional Alpine.js Load -->
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+    <!-- ========== JAVASCRIPT ========== -->
     <script>
-        // Initialize AOS
+        // ===== INITIALIZATION =====
+        // Initialize AOS (Animate On Scroll)
         AOS.init({
             duration: 800,
             once: true,
             offset: 100
         });
 
-        // Sidebar toggle
+        // ===== SIDEBAR FUNCTIONALITY =====
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
 
+        // Toggle sidebar on mobile
         sidebarToggle.addEventListener('click', () => {
             sidebar.classList.toggle('-translate-x-full');
             overlay.classList.toggle('hidden');
         });
 
+        // Close sidebar when clicking overlay
         overlay.addEventListener('click', () => {
             sidebar.classList.add('-translate-x-full');
             overlay.classList.add('hidden');
@@ -326,7 +355,7 @@
             }
         });
 
-        // Add hover effects to table rows
+        // ===== TABLE ROW HOVER EFFECTS =====
         const tableRows = document.querySelectorAll('tbody tr');
         tableRows.forEach(row => {
             row.addEventListener('mouseenter', () => {
@@ -339,43 +368,45 @@
             });
         });
 
-        // Handler dengan SweetAlert2 untuk #projectForm
-  document.getElementById('projectForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Tampilkan loading SweetAlert
-    Swal.fire({
-      title: 'Updating Project...',
-      html: 'Please wait while we save your changes',
-      icon: 'info',
-      allowOutsideClick: false,
-      showConfirmButton: false,
-      willOpen: () => {
-        Swal.showLoading();
-      }
-    });
+        // ===== FORM SUBMISSION WITH SWEETALERT =====
+        document.getElementById('projectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading alert
+            Swal.fire({
+                title: 'Updating Project...',
+                html: 'Please wait while we save your changes',
+                icon: 'info',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                willOpen: () => {
+                    Swal.showLoading();
+                }
+            });
 
-    // Simulasi delay (ganti dengan request async kalau mau)
-    setTimeout(() => {
-      Swal.fire({
-        title: 'Success!',
-        text: 'Your project has been updated successfully',
-        icon: 'success',
-        confirmButtonText: 'Great!',
-        confirmButtonColor: '#3B82F6',
-        timer: 3000,
-        timerProgressBar: true
-      }).then(() => {
-        // Setelah SweetAlert success, submit form secara normal
-        this.submit();
-      });
-    }, 2000);
-  });
-  // File input enhancement
+            // Simulate delay (replace with actual async request if needed)
+            setTimeout(() => {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Your project has been updated successfully',
+                    icon: 'success',
+                    confirmButtonText: 'Great!',
+                    confirmButtonColor: '#3B82F6',
+                    timer: 3000,
+                    timerProgressBar: true
+                }).then(() => {
+                    // Submit form normally after success alert
+                    this.submit();
+                });
+            }, 2000);
+        });
+
+        // ===== FILE INPUT VALIDATION =====
         document.getElementById('video_file').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                const fileSize = (file.size / 1024 / 1024).toFixed(2); // MB
+                const fileSize = (file.size / 1024 / 1024).toFixed(2); // Convert to MB
+                
                 if (fileSize > 100) {
                     Swal.fire({
                         title: 'File Too Large',
@@ -395,9 +426,43 @@
                 }
             }
         });
+
+        // ===== LOGOUT CONFIRMATION =====
+        function confirmLogout(event) {
+            event.preventDefault(); // Prevent immediate logout
+
+            Swal.fire({
+                title: 'Yakin mau logout?',
+                text: "Anda akan keluar dari sesi ini",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3B82F6',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Logout...',
+                        text: 'Sedang memproses',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        timer: 1200
+                    });
+
+                    // Redirect after small delay to show animation
+                    setTimeout(() => {
+                        window.location.href = "{{ url_for('logout') }}";
+                    }, 1200);
+                }
+            });
+        }
     </script>
 
+    <!-- ========== CUSTOM STYLES ========== -->
     <style>
+        /* ===== BUTTON RIPPLE EFFECT ===== */
         .ripple {
             position: absolute;
             border-radius: 50%;
@@ -418,7 +483,7 @@
             overflow: hidden;
         }
 
-        /* Custom scrollbar */
+        /* ===== CUSTOM SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;

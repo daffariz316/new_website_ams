@@ -9,6 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="{{ url_for('static', filename='assets/imgs/logo.ico') }}" type="image/x-icon"/>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script>
         tailwind.config = {
             theme: {
@@ -85,22 +86,35 @@
                         <i class="fas fa-chevron-down text-gray-400"></i>
                     </div> -->
                    <!-- Container -->
-                <div class="relative" x-data="{ open: false }" data-aos="fade-down" data-aos-delay="300">
-                <!-- Trigger -->
-                <div class="flex items-center space-x-3 cursor-pointer" @click="open = !open">
-                    <img  src="{{ url_for('static', filename='assets/imgs/profile-picture.png') }}" alt="Profile" class="w-8 h-8 rounded-full object-cover">
-                    <span class="hidden md:block text-gray-700 font-medium">
-                    {{ user.name }}
-                    </span>
-                    <i class="fas fa-chevron-down text-gray-400"></i>
-                </div>
+               <div class="flex items-center space-x-3">
+                        <div x-data="{ open: false }" class="relative flex items-center space-x-3 pl-4 border-l border-gray-200 cursor-pointer" data-aos="fade-left" data-aos-delay="200">
+                            <!-- Avatar -->
+                            <div class="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold animate-float">
+                                {{ user.name[0]|upper }}{{ user.name[1]|upper }}
+                            </div>
 
-                <!-- Dropdown -->
-                <div x-show="open"  @click.away="open = false" x-transition class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50">
-                    <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    Sign Out
-                    </a>
-                </div>
+                            <!-- Username -->
+                            <div class="hidden md:block">
+                                <p class="text-sm font-medium text-gray-700">{{ user.name }}</p>
+                                <p class="text-xs text-gray-500">Administrator</p>
+                            </div>
+
+                            <!-- Panah animasi -->
+                            <i class="fas fa-chevron-down text-gray-400 text-sm transition-transform duration-200"
+                            :class="{ 'rotate-180': open }"
+                            @click="open = !open"></i>
+
+                            <!-- Dropdown -->
+                            <div x-show="open" @click.outside="open = false"
+                                x-transition
+                                class="absolute top-full right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                                <a href="{{ url_for('logout') }}" 
+                                    class="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                                    onclick="confirmLogout(event)">
+                                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                </a>
+                            </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -162,35 +176,22 @@
                 </div>
 
                 <!-- Action Buttons - Horizontal Layout -->
-                <div class="flex gap-4 pt-6 border-t border-gray-200" data-aos="fade-up" data-aos-delay="700">
-                    <button 
-                        type="submit" 
-                        class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-300 active:scale-[0.98]"
-                    >
-                        <i class="fas fa-save mr-2"></i>
-                        Update Project
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 border-t">
+                    <button type="submit" 
+                        class="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-xl hover:scale-[1.02] transition">
+                        <i class="fas fa-save mr-2"></i> Update
                     </button>
-                    
-                    <button 
-                        type="reset"
-                        class="flex-1 border-2 border-gray-300 text-gray-700 font-bold py-4 px-8 rounded-xl hover:bg-gray-50 transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-gray-200 active:scale-[0.98]"
-                    >
-                        <i class="fas fa-redo mr-2"></i>
-                        Reset Form
+                    <button type="reset" 
+                        class="flex-1 border-2 border-gray-300 text-gray-700 font-bold py-3 px-6 rounded-xl hover:bg-gray-50 transition">
+                        <i class="fas fa-redo mr-2"></i> Reset
                     </button>
-                    
-                    <button 
-                        type="button"
-                        onclick="window.history.back()"
-                        class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-gray-300 active:scale-[0.98]"
-                    >
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Back to List
+                    <button type="button" onclick="window.history.back()" 
+                        class="flex-1 bg-gray-500 text-white font-bold py-3 px-6 rounded-xl hover:bg-gray-600 transition">
+                        <i class="fas fa-arrow-left mr-2"></i> Kembali
                     </button>
                 </div>
             </form>
          </main>
-
     </div>
 
     <!-- Pastikan Alpine.js di-load -->
@@ -297,6 +298,36 @@
                 }
             }
         });
+        function confirmLogout(event) {
+    event.preventDefault(); // cegah langsung logout
+
+    Swal.fire({
+        title: 'Yakin mau logout?',
+        text: "Anda akan keluar dari sesi ini",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3B82F6',
+        cancelButtonColor: '#6b7280',
+        confirmButtonText: 'Ya, Logout',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Logout...',
+                text: 'Sedang memproses',
+                icon: 'info',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                timer: 1200
+            });
+
+            // Redirect setelah delay kecil agar animasi muncul
+            setTimeout(() => {
+                window.location.href = "{{ url_for('logout') }}";
+            }, 1200);
+        }
+    });
+}
     </script>
 
     <style>

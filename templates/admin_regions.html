@@ -1,79 +1,22 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin - Regions</title>
-</head>
-<body>
-    <h1>Tambah Kota/Kabupaten</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <label>Pilih Provinsi:</label><br>
-        <select name="province_id" required>
-            <option value="">-- Pilih Provinsi --</option>
-            {% for prov in provinces %}
-            <option value="{{ prov.id }}">{{ prov.name }}</option>
-            {% endfor %}
-        </select><br><br>
-
-        <label>Nama Kota/Kabupaten:</label><br>
-        <input type="text" name="name" required><br><br>
-
-        <label>Tipe:</label><br>
-        <select name="type" required>
-            <option value="Kota">Kota</option>
-            <option value="Kabupaten">Kabupaten</option>
-        </select><br><br>
-
-        <label>Logo Kota/Kabupaten:</label><br>
-        <input type="file" name="logo" required><br><br>
-
-        <button type="submit">Tambah</button>
-    </form>
-
-    <hr>
-
-    <h2>Daftar Kota/Kabupaten</h2>
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Provinsi</th>
-                <th>Nama</th>
-                <th>Tipe</th>
-                <th>Logo</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for r in regions %}
-            <tr>
-                <td>{{ r.id }}</td>
-                <td>{{ r.province_name }}</td>
-                <td>{{ r.name }}</td>
-                <td>{{ r.type }}</td>
-                <td>
-                    {% if r.logo %}
-                    <img src="{{ url_for('static', filename=r.logo) }}" width="50">
-                    {% else %}
-                    Tidak ada logo
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</body>
-</html> -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel Dashboard</title>
+    
+    <!-- CSS Dependencies -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/3.0.0-beta.6/aos.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="icon" href="{{ url_for('static', filename='assets/imgs/logo.ico') }}" type="image/x-icon"/>
+    
+    <!-- JavaScript Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -87,485 +30,8 @@
             }
         }
     </script>
-    <!-- SweetAlert2 CDN -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-</head>
-<body class="bg-gray-50 font-sans">
-    <!-- Sidebar -->
-    <div id="sidebar" class="fixed left-0 top-0 w-64 h-full bg-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50">
-        <div class="p-6">
-            <div class="flex items-center space-x-3 mb-8" data-aos="fade-down">
-                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                    <img src="{{ url_for('static', filename='assets/imgs/logo.png') }}" alt="Logo" class="w-6 h-6 object-contain">
-                </div>
-                <h1 class="text-xl font-bold">AdminPanel</h1>
-            </div>
-            
-            <nav class="space-y-2">
-                <a href="{{ url_for('dashboard') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="100">
-                    <i class="fas fa-home"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="{{ url_for('portfolio') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="200">
-                    <i class="fas fa-folder"></i>
-                    <span>Portfolio</span>
-                </a>
-                <a href="{{ url_for('manage_provinces') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="200">
-                    <i class="fas fa-map"></i>
-                    <span>Provinsi</span>
-                </a>
-                <a href="{{ url_for('manage_regions') }}" class="flex items-center space-x-3 p-3 rounded-lg bg-primary text-white" data-aos="fade-right" data-aos-delay="200">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Region</span>
-                </a>
-            </nav>
-        </div>
-    </div>
-
-    <!-- Overlay untuk mobile -->
-    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
-
-    <!-- Main Content -->
-    <div class="lg:ml-64 min-h-screen">
-        <!-- Header -->
-        <header class="bg-white shadow-sm border-b">
-            <div class="flex items-center justify-between p-4">
-                <div class="flex items-center space-x-4">
-                    <button id="sidebarToggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
-                        <i class="fas fa-bars text-gray-600"></i>
-                    </button>
-                    <h2 class="text-2xl font-bold text-gray-800" data-aos="fade-down">Client Dashboard</h2>
-                </div>
-                
-                <div class="flex items-center space-x-4">
-                    <!-- <div class="relative hidden md:block" data-aos="fade-down" data-aos-delay="100">
-                        <input type="text" placeholder="Cari..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-primary">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </div> -->
-                    <!-- <form method="GET" action="{{ url_for('manage_regions') }}" class="mb-4">
-                        <div class="relative md:block w-full max-w-sm" data-aos="fade-down" data-aos-delay="100">
-                            <input
-                                type="text"
-                                name="q"
-                                value="{{ request.args.get('q', '') }}"
-                                placeholder="Cari..."
-                                class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-primary w-full"
-                            >
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        </div>
-                    </form>
-
-                    {% if request.args.get('q') %}
-                        <a href="{{ url_for('manage_regions') }}" class="text-sm text-blue-500 underline inline-block mt-2" title="Reset filter"> <i class="fas fa-times"></i></a>
-                    {% endif %} -->
-
-                <div class="flex items-center justify-between space-x-4 w-full">
-                <!-- Search -->
-                <form method="GET" action="{{ url_for('manage_regions') }}" class="mb-0">
-                    <div class="relative w-full max-w-sm" data-aos="fade-down" data-aos-delay="100">
-                    <!-- Input: gunakan h-10 supaya tinggi konsisten -->
-                    <input
-                        type="text"
-                        name="q"
-                        id="searchInput"
-                        value="{{ request.args.get('q', '') }}"
-                        placeholder="Cari..."
-                        class="pl-10 pr-10 h-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-full"
-                        oninput="toggleClearBtn()"
-                    >
-                    <!-- Search icon: vertikal center dengan inset-y-0 dan flex -->
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <i class="fas fa-search text-gray-400"></i>
-                    </div>
-
-                    <!-- Clear button: vertikal center di kanan -->
-                    <button
-                        type="button"
-                        id="clearBtn"
-                        class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors duration-200"
-                        style="display: none;"
-                        onclick="clearSearch()"
-                        aria-label="Clear search"
-                    >
-                        <i class="fa fa-times"></i>
-                    </button>
-                    </div>
-                </form>
-                <!-- Profile (sejajar dengan search karena parent .flex and items-center) -->
-                <div class="relative" x-data="{ open: false }" data-aos="fade-down" data-aos-delay="300">
-                    <!-- Trigger -->
-                    <div class="flex items-center space-x-3 cursor-pointer" @click="open = !open">
-                    <img src="{{ url_for('static', filename='assets/imgs/profile-picture.png') }}" alt="Profile" class="w-8 h-8 rounded-full object-cover">
-                    <span class="hidden md:block text-gray-700 font-medium">
-                        {{ user.name }}
-                    </span>
-                    <i class="fas fa-chevron-down text-gray-400"></i>
-                    </div>
-
-                    <!-- Dropdown -->
-                    <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50">
-                    <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                        Sign Out
-                    </a>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Dashboard Content -->
-        <main class="p-6 max-w-7xl mx-auto">
-            <!-- Add New Form -->
-            <div id="addForm" class="bg-white rounded-xl shadow-sm border mb-8 hidden" data-aos="fade-up" data-aos-delay="600">
-                <div class="p-6 border-b">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-lg font-semibold text-gray-800">Tambah Kota/Kabupaten Baru</h3>
-                    <button id="closeForm" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                    <i class="fas fa-times text-gray-500"></i>
-                    </button>
-                </div>
-                </div>
-                
-                <form method="POST" enctype="multipart/form-data" action="{{ url_for('manage_regions') }}" id="addProvinceForm" class="p-6 space-y-4">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Provinsi:</label><br>
-                    <select name="province_id" required id="province_select_alt"
-                    required 
-                    class="w-full px-4 py-3 pr-10 text-gray-900 
-                    bg-gradient-to-r from-blue-50 to-indigo-50 
-                    border-2 border-blue-200 rounded-xl 
-                    shadow-md appearance-none focus:outline-none 
-                    focus:ring-4 focus:ring-blue-300 
-                    focus:border-blue-400 hover:border-blue-300 
-                    hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
-                        <option value="" class="text-gray-500">-- Pilih Provinsi --</option>
-                        {% for prov in provinces %}
-                        <option value="{{ prov.id }}">{{ prov.name }}</option>
-                        {% endfor %}
-                    </select><br><br>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Nama Kota/Kabupaten:</label><br>
-                    <input type="text" name="name" required class="w-full px-4 py-3 border rounded-lg"><br><br>
-
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Tipe:</label><br>
-                    <select name="type" required class="w-full px-4 py-3 pr-10 text-gray-900 
-                    bg-gradient-to-r from-blue-50 to-indigo-50 
-                    border-2 border-blue-200 rounded-xl 
-                    shadow-md appearance-none focus:outline-none 
-                    focus:ring-4 focus:ring-blue-300 
-                    focus:border-blue-400 hover:border-blue-300 
-                    hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
-                        <option value="Kota">Kota</option>
-                        <option value="Kabupaten">Kabupaten</option>
-                    </select><br><br>
-
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Logo Kota/Kabupaten:</label><br>
-                    <input type="file" name="logo" required class="w-full px-4 py-3 border rounded-lg"><br><br>
-
-                     <!-- Tombol -->
-                <div class="flex flex-col md:flex-row gap-4 mt-6 pt-4 border-t">
-                    <button type="submit"
-                    class="flex-1 bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium">
-                    <i class="fas fa-save mr-2"></i>Simpan Region
-                    </button>
-                    <button type="reset"
-                    class="flex-1 border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium">
-                    <i class="fas fa-redo mr-2"></i>Reset
-                    </button>
-                </div>
-                </form>
-
-            </div>
-
-            <!-- Data Table -->
-            <div class="bg-white rounded-xl shadow-sm border" data-aos="fade-up" data-aos-delay="700">
-                <div class="p-6 border-b">
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4 md:mb-0">Client Provinsi Information</h3>
-                    <div class="flex flex-wrap gap-2">
-                    <button id="showAddForm" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors">
-                        <i class="fas fa-plus mr-2"></i>Add
-                    </button>
-                    </div>
-                </div>
-                </div>
-
-                <div class="w-full overflow-x-auto">
-                 <table class="min-w-full">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Provinsi</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Logo</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for r in regions %}
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                    {{ loop.index }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ r.province_name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ r.name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ r.type }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {% if r.logo %}
-                                    <img src="{{ url_for('static', filename=r.logo) }}" width="50">
-                                    {% else %}
-                                    Tidak ada logo
-                                    {% endif %}
-                                </td>
-                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <a href="{{ url_for('edit_region', id=r.id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                        <form id="deleteForm-{{ r.id }}" action="{{ url_for('delete_region', id=r.id) }}" method="POST" style="display:inline;">
-                                            <button type="button" id="deleteBtn" 
-                                                 onclick="confirmDelete('{{ r.id }}')"
-                                            class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-4 py-2 rounded transition-colors">
-                                                Hapus
-                                            </button>
-                                        </form>
-                                    </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="px-6 py-3 border-t flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div class="text-sm text-gray-700">
-                    Menampilkan <span class="font-medium">1</span> sampai <span class="font-medium">3</span> dari <span class="font-medium">97</span> hasil
-                </div>
-                <div class="flex flex-wrap gap-2">
-                    <button class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">Sebelumnya</button>
-                    <button class="px-3 py-1 bg-primary text-white text-sm rounded-md">1</button>
-                    <button class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">2</button>
-                    <button class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">3</button>
-                    <button class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">Selanjutnya</button>
-                </div>
-                </div>
-            </div>
-        </main>
-
-    </div>
-
-    <!-- Pastikan Alpine.js di-load -->
-<script src="//unpkg.com/alpinejs" defer></script>
-    <script>
-        // Initialize AOS
-        AOS.init({
-            duration: 800,
-            once: true,
-            offset: 100
-        });
-        document.querySelectorAll('.status-toggle').forEach(toggle => {
-    const statusText = toggle.closest('div').querySelector('.status-text');
-    const toggleIcon = toggle.nextElementSibling.querySelector('.toggle-icon');
-
-    toggle.addEventListener('change', function() {
-      if (this.checked) {
-        statusText.textContent = 'Enabled';
-        statusText.className = 'status-text text-sm font-medium text-green-600';
-        toggleIcon.textContent = '✅';
-      } else {
-        statusText.textContent = 'Disabled';
-        statusText.className = 'status-text text-sm font-medium text-red-600';
-        toggleIcon.textContent = '❌';
-      }
-    });
-  });
-
-        // Sidebar toggle
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('overlay');
-
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
-        });
-
-        overlay.addEventListener('click', () => {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        });
-
-        // Auto-close sidebar on resize if screen becomes large
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= 1024) {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.add('hidden');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-            }
-        });
-
-        // Add hover effects to table rows
-        const tableRows = document.querySelectorAll('tbody tr');
-        tableRows.forEach(row => {
-            row.addEventListener('mouseenter', () => {
-                row.style.transform = 'scale(1.01)';
-                row.style.transition = 'transform 0.2s ease-in-out';
-            });
-            
-            row.addEventListener('mouseleave', () => {
-                row.style.transform = 'scale(1)';
-            });
-        });
-
-       // === Add Portfolio Form ===
-        const showAddFormBtn = document.getElementById('showAddForm');
-        const addForm = document.getElementById('addForm');
-        const closeFormBtn = document.getElementById('closeForm');
-        const addProvinceForm = document.getElementById('addProvinceForm');
-        // Show form
-        showAddFormBtn.addEventListener('click', () => {
-        addForm.classList.remove('hidden');
-        addForm.scrollIntoView({ behavior: 'smooth' });
-        AOS.refresh();
-        });
-
-        // Close form
-        closeFormBtn.addEventListener('click', () => {
-        addForm.classList.add('hidden');
-        });
-
-
-        // === Reset Form ===
-        addProvinceForm.addEventListener('reset', () => {
-            const fields = addProvinceForm.querySelectorAll('input, textarea');
-            fields.forEach(field => {
-            field.classList.remove('border-red-500');
-            const feedback = field.parentNode.querySelector('.invalid-feedback');
-            if (feedback) feedback.classList.add('hidden');
-            });
-        });
-
-        // === Submit + SweetAlert ===
-        addProvinceForm.addEventListener('submit', (e) => {
-            e.preventDefault(); // cegah submit default
-
-            // Validasi wajib
-            let valid = true;
-            const requiredFields = addProvinceForm.querySelectorAll('input[required], textarea[required]');
-            requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-                field.classList.add('border-red-500');
-                valid = false;
-            } else {
-                field.classList.remove('border-red-500');
-            }
-            });
-
-            if (!valid) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Isi semua field wajib!',
-                timer: 2000,
-                showConfirmButton: false
-            });
-            return;
-            }
-
-            Swal.fire({
-            title: 'Yakin Simpan?',
-            text: 'Pastikan data provinsi sudah benar!',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: 'Simpan',
-            cancelButtonText: 'Batal'
-            }).then((result) => {
-            if (result.isConfirmed) {
-                const submitBtn = addProvinceForm.querySelector('button[type="submit"]');
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
-                submitBtn.disabled = true;
-
-                addProvinceForm.submit(); // submit ke Flask
-            }
-            });
-        });
-
-        // === Validasi real-time ===
-        const formFields = addProvinceForm.querySelectorAll('input[required], textarea[required]');
-        formFields.forEach(field => {
-            field.addEventListener('blur', () => {
-            if (!field.value.trim()) {
-                field.classList.add('border-red-500');
-            } else {
-                field.classList.remove('border-red-500');
-            }
-            });
-        });
-        // Add click animation to buttons
-        const buttons = document.querySelectorAll('button');
-        buttons.forEach(button => {
-            button.addEventListener('click', function(e) {
-                let ripple = document.createElement('span');
-                ripple.classList.add('ripple');
-                this.appendChild(ripple);
-
-                let x = e.clientX - e.target.offsetLeft;
-                let y = e.clientY - e.target.offsetTop;
-
-                ripple.style.left = `${x}px`;
-                ripple.style.top = `${y}px`;
-
-                setTimeout(() => {
-                    ripple.remove();
-                }, 300);
-            });
-        });
-    // Confirm delete function for SweetAlert2
-    function confirmDelete(regionId) {
-    Swal.fire({
-      title: 'Yakin ingin menghapus?',
-      text: 'Data ini tidak bisa dikembalikan setelah dihapus.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Batal'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        document.getElementById(`deleteForm-${regionId}`).submit();
-      }
-    });
-  }
-    // Fungsi untuk menampilkan/menyembunyikan tombol clear
-    function toggleClearButton() {
-        const input = document.getElementById('searchInput');
-        const clearBtn = document.getElementById('clearBtn');
-        
-        if (input.value.trim() !== '') {
-            clearBtn.style.display = 'block';
-        } else {
-            clearBtn.style.display = 'none';
-        }
-    }
-
-    // Fungsi untuk clear search
-    function clearSearch() {
-        // Redirect ke URL tanpa parameter q
-        window.location.href = "{{ url_for('manage_regions') }}";
-    }
-
-    // Event listener
-    document.getElementById('searchInput').addEventListener('input', toggleClearButton);
-
-    // On page load, show clear button if search is not empty
-    window.addEventListener('DOMContentLoaded', function() {
-        var input = document.getElementById('searchInput');
-        var clearBtn = document.getElementById('clearBtn');
-        if (input.value.trim() !== '') {
-            clearBtn.style.display = 'block';
-        } else {
-            clearBtn.style.display = 'none';
-        }
-    });
-    </script>
-
+    
+    <!-- Custom Styles -->
     <style>
         .ripple {
             position: absolute;
@@ -607,5 +73,539 @@
             background: #a8a8a8;
         }
     </style>
+</head>
+
+<body class="bg-gray-50 font-sans">
+    <!-- Sidebar -->
+    <div id="sidebar" class="fixed left-0 top-0 w-64 h-full bg-secondary text-white transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out z-50">
+        <div class="p-6">
+            <div class="flex items-center space-x-3 mb-8" data-aos="fade-down">
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                    <img src="{{ url_for('static', filename='assets/imgs/logo.png') }}" alt="Logo" class="w-6 h-6 object-contain">
+                </div>
+                <h1 class="text-xl font-bold">AdminPanel</h1>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="{{ url_for('dashboard') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="100">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="{{ url_for('portfolio') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="200">
+                    <i class="fas fa-folder"></i>
+                    <span>Portfolio</span>
+                </a>
+                <a href="{{ url_for('manage_provinces') }}" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-700 transition-colors" data-aos="fade-right" data-aos-delay="200">
+                    <i class="fas fa-map"></i>
+                    <span>Provinsi</span>
+                </a>
+                <a href="{{ url_for('manage_regions') }}" class="flex items-center space-x-3 p-3 rounded-lg bg-primary text-white" data-aos="fade-right" data-aos-delay="200">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Region</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Overlay untuk mobile -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden"></div>
+
+    <!-- Main Content -->
+    <div class="lg:ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b">
+            <div class="flex flex-wrap items-center justify-between p-4 gap-2">
+                <!-- Kiri: Toggle + Judul -->
+                <div class="flex items-center space-x-3">
+                    <!-- Tombol Sidebar (muncul di mobile) -->
+                    <button id="sidebarToggle" class="lg:hidden p-2 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-bars text-gray-600"></i>
+                    </button>
+                    <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-gray-800" data-aos="fade-down">
+                        Client Dashboard
+                    </h2>
+                </div>
+
+                <!-- Kanan: Search + User -->
+                <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-end">
+                    <!-- Search bar -->
+                    <div class="relative flex-1 sm:flex-none" data-aos="fade-down" data-aos-delay="100">
+                        <form method="GET" action="{{ url_for('manage_regions') }}" class="mb-0">
+                            <div class="relative w-full md:w-64">
+                                <!-- Input -->
+                                <input 
+                                    type="text" 
+                                    name="q" 
+                                    id="searchInput"
+                                    value="{{ request.args.get('q', '') }}"
+                                    placeholder="Cari..." 
+                                    class="pl-10 pr-10 h-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary w-full text-sm"
+                                    oninput="toggleClearBtn()"
+                                >
+                                <!-- Icon Search -->
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <i class="fas fa-search text-gray-400"></i>
+                                </div>
+                                <!-- Clear Btn -->
+                                <button
+                                    type="button"
+                                    id="clearBtn"
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors duration-200"
+                                    style="display: none;"
+                                    onclick="clearSearch()"
+                                    aria-label="Clear search"
+                                >
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- User dropdown -->
+                    <div x-data="{ open: false }" class="relative flex items-center space-x-2 sm:space-x-3 pl-3 sm:pl-4 border-l border-gray-200 cursor-pointer" data-aos="fade-left" data-aos-delay="200">
+                        <!-- Avatar -->
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
+                            {{ user.name[0]|upper }}{{ user.name[1]|upper }}
+                        </div>
+
+                        <!-- Username (hidden di layar sempit) -->
+                        <div class="hidden sm:block">
+                            <p class="text-xs sm:text-sm font-medium text-gray-700 truncate max-w-[80px] lg:max-w-none">
+                                {{ user.name }}
+                            </p>
+                            <p class="hidden sm:block text-xs text-gray-500">Administrator</p>
+                        </div>
+                        
+                        <!-- Arrow -->
+                        <i class="fas fa-chevron-down text-gray-400 text-sm transition-transform duration-200"
+                           :class="{ 'rotate-180': open }"
+                           @click="open = !open">
+                        </i>
+
+                        <!-- Dropdown -->
+                        <div x-show="open" @click.outside="open = false"
+                             x-transition
+                             class="absolute top-full right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                            <a href="{{ url_for('logout') }}" 
+                               class="block px-4 py-2 text-sm text-red-500 hover:bg-gray-100"
+                               onclick="confirmLogout(event)">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-6 max-w-7xl mx-auto">
+            <!-- Add New Form -->
+            <div id="addForm" class="bg-white rounded-xl shadow-sm border mb-8 hidden" data-aos="fade-up" data-aos-delay="600">
+                <div class="p-6 border-b">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-800">Tambah Kota/Kabupaten Baru</h3>
+                        <button id="closeForm" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                            <i class="fas fa-times text-gray-500"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <form method="POST" enctype="multipart/form-data" action="{{ url_for('manage_regions') }}" id="addProvinceForm" class="p-6 space-y-4">
+                    <!-- Pilih Provinsi -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Provinsi:</label>
+                        <select name="province_id" required id="province_select_alt"
+                                class="w-full px-4 py-3 pr-10 text-gray-900 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl shadow-md appearance-none focus:outline-none focus:ring-4 focus:ring-blue-300 focus:border-blue-400 hover:border-blue-300 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
+                            <option value="" class="text-gray-500">-- Pilih Provinsi --</option>
+                            {% for prov in provinces %}
+                            <option value="{{ prov.id }}">{{ prov.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Nama Kota/Kabupaten -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Nama Kota/Kabupaten:</label>
+                        <input type="text" name="name" required class="w-full px-4 py-3 border rounded-lg">
+                    </div>
+
+                    <!-- Tipe -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Tipe:</label>
+                        <select name="type" required 
+                                class="w-full px-4 py-3 pr-10 text-gray-900 bg-gradient-to-r from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-xl shadow-md appearance-none focus:outline-none focus:ring-4 focus:ring-blue-300 focus:border-blue-400 hover:border-blue-300 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-[1.02]">
+                            <option value="Kota">Kota</option>
+                            <option value="Kabupaten">Kabupaten</option>
+                        </select>
+                    </div>
+
+                    <!-- Logo -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Logo Kota/Kabupaten:</label>
+                        <input type="file" name="logo" required class="w-full px-4 py-3 border rounded-lg">
+                    </div>
+
+                    <!-- Tombol -->
+                    <div class="flex flex-col md:flex-row gap-4 mt-6 pt-4 border-t">
+                        <button type="submit"
+                                class="flex-1 bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium">
+                            <i class="fas fa-save mr-2"></i>Simpan Region
+                        </button>
+                        <button type="reset"
+                                class="flex-1 border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+                            <i class="fas fa-redo mr-2"></i>Reset
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Data Table -->
+            <div class="bg-white rounded-xl shadow-sm border" data-aos="fade-up" data-aos-delay="700">
+                <div class="p-6 border-b">
+                    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-4 md:mb-0">Client Provinsi Information</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <button id="showAddForm" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                <i class="fas fa-plus mr-2"></i>Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full overflow-x-auto" data-aos="fade-up">
+                    <table class="min-w-full border border-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-3 py-2 sm:px-6 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                                <th class="px-3 py-2 sm:px-6 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider">Provinsi</th>
+                                <th class="px-3 py-2 sm:px-6 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                <th class="px-3 py-2 sm:px-6 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider">Tipe</th>
+                                <th class="px-3 py-2 sm:px-6 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider">Logo</th>
+                                <th class="px-3 py-2 sm:px-6 sm:py-3 text-left text-[10px] sm:text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white">
+                            {% for r in regions %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
+                                    {{ loop.index }}
+                                </td>
+                                <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                    {{ r.province_name }}
+                                </td>
+                                <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                    {{ r.name }}
+                                </td>
+                                <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                    {{ r.type }}
+                                </td>
+                                <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                                    {% if r.logo %}
+                                        <img src="{{ url_for('static', filename=r.logo) }}" class="w-8 h-8 sm:w-12 sm:h-12 object-contain">
+                                    {% else %}
+                                        Tidak ada logo
+                                    {% endif %}
+                                </td>
+                                <td class="px-3 py-2 sm:px-6 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
+                                    <a href="{{ url_for('edit_region', id=r.id) }}" 
+                                    class="text-indigo-600 hover:text-indigo-900 mr-2 sm:mr-3">Edit</a>
+                                    <form id="deleteForm-{{ r.id }}" 
+                                        action="{{ url_for('delete_region', id=r.id) }}" 
+                                        method="POST" style="display:inline;">
+                                        <button type="button" id="deleteBtn"
+                                                onclick="confirmDelete('{{ r.id }}')"
+                                                class="px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 rounded transition-colors">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="px-6 py-3 border-t">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+                        <div class="text-sm text-gray-700">
+                            Menampilkan <span class="font-medium">{{ start }}</span> sampai
+                            <span class="font-medium">{{ end }}</span> dari
+                            <span class="font-medium">{{ total }}</span> hasil
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-2">
+                        {% if page > 1 %}
+                            <a href="{{ url_for('manage_regions', page=page-1, q=request.args.get('q','')) }}"
+                               class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">Sebelumnya</a>
+                        {% endif %}
+
+                        {% for p in range(1, (total // per_page) + (1 if total % per_page else 0) + 1) %}
+                            <a href="{{ url_for('manage_regions', page=p, q=request.args.get('q','')) }}"
+                               class="px-3 py-1 text-sm rounded-md {% if p == page %}bg-blue-600 text-white{% else %}border border-gray-300 hover:bg-gray-50{% endif %}">
+                                {{ p }}
+                            </a>
+                        {% endfor %}
+
+                        {% if page * per_page < total %}
+                            <a href="{{ url_for('manage_regions', page=page+1, q=request.args.get('q','')) }}"
+                               class="px-3 py-1 border border-gray-300 text-sm rounded-md hover:bg-gray-50">Selanjutnya</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Status toggle functionality
+        document.querySelectorAll('.status-toggle').forEach(toggle => {
+            const statusText = toggle.closest('div').querySelector('.status-text');
+            const toggleIcon = toggle.nextElementSibling.querySelector('.toggle-icon');
+
+            toggle.addEventListener('change', function() {
+                if (this.checked) {
+                    statusText.textContent = 'Enabled';
+                    statusText.className = 'status-text text-sm font-medium text-green-600';
+                    toggleIcon.textContent = '✅';
+                } else {
+                    statusText.textContent = 'Disabled';
+                    statusText.className = 'status-text text-sm font-medium text-red-600';
+                    toggleIcon.textContent = '❌';
+                }
+            });
+        });
+
+        // Sidebar toggle functionality
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        });
+
+        overlay.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        });
+
+        // Auto-close sidebar on resize if screen becomes large
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.add('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+            }
+        });
+
+        // Add hover effects to table rows
+        const tableRows = document.querySelectorAll('tbody tr');
+        tableRows.forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.style.transform = 'scale(1.01)';
+                row.style.transition = 'transform 0.2s ease-in-out';
+            });
+            
+            row.addEventListener('mouseleave', () => {
+                row.style.transform = 'scale(1)';
+            });
+        });
+
+        // Add Portfolio Form functionality
+        const showAddFormBtn = document.getElementById('showAddForm');
+        const addForm = document.getElementById('addForm');
+        const closeFormBtn = document.getElementById('closeForm');
+        const addProvinceForm = document.getElementById('addProvinceForm');
+
+        // Show form
+        showAddFormBtn.addEventListener('click', () => {
+            addForm.classList.remove('hidden');
+            addForm.scrollIntoView({ behavior: 'smooth' });
+            AOS.refresh();
+        });
+
+        // Close form
+        closeFormBtn.addEventListener('click', () => {
+            addForm.classList.add('hidden');
+        });
+
+        // Reset Form
+        addProvinceForm.addEventListener('reset', () => {
+            const fields = addProvinceForm.querySelectorAll('input, textarea');
+            fields.forEach(field => {
+                field.classList.remove('border-red-500');
+                const feedback = field.parentNode.querySelector('.invalid-feedback');
+                if (feedback) feedback.classList.add('hidden');
+            });
+        });
+
+        // Submit + SweetAlert
+        addProvinceForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // cegah submit default
+
+            // Validasi wajib
+            let valid = true;
+            const requiredFields = addProvinceForm.querySelectorAll('input[required], textarea[required]');
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('border-red-500');
+                    valid = false;
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+
+            if (!valid) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Isi semua field wajib!',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'Yakin Simpan?',
+                text: 'Pastikan data provinsi sudah benar!',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const submitBtn = addProvinceForm.querySelector('button[type="submit"]');
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...';
+                    submitBtn.disabled = true;
+
+                    addProvinceForm.submit(); // submit ke Flask
+                }
+            });
+        });
+
+        // Validasi real-time
+        const formFields = addProvinceForm.querySelectorAll('input[required], textarea[required]');
+        formFields.forEach(field => {
+            field.addEventListener('blur', () => {
+                if (!field.value.trim()) {
+                    field.classList.add('border-red-500');
+                } else {
+                    field.classList.remove('border-red-500');
+                }
+            });
+        });
+
+        // Add click animation to buttons
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                let ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                this.appendChild(ripple);
+
+                let x = e.clientX - e.target.offsetLeft;
+                let y = e.clientY - e.target.offsetTop;
+
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+
+                setTimeout(() => {
+                    ripple.remove();
+                }, 300);
+            });
+        });
+
+        // Confirm delete function for SweetAlert2
+        function confirmDelete(regionId) {
+            Swal.fire({
+                title: 'Yakin ingin menghapus?',
+                text: 'Data ini tidak bisa dikembalikan setelah dihapus.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(`deleteForm-${regionId}`).submit();
+                }
+            });
+        }
+
+        // Search functionality
+        function toggleClearButton() {
+            const input = document.getElementById('searchInput');
+            const clearBtn = document.getElementById('clearBtn');
+            
+            if (input.value.trim() !== '') {
+                clearBtn.style.display = 'block';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+        }
+
+        function clearSearch() {
+            // Redirect ke URL tanpa parameter q
+            window.location.href = "{{ url_for('manage_regions') }}";
+        }
+
+        // Event listener
+        document.getElementById('searchInput').addEventListener('input', toggleClearButton);
+
+        // On page load, show clear button if search is not empty
+        window.addEventListener('DOMContentLoaded', function() {
+            var input = document.getElementById('searchInput');
+            var clearBtn = document.getElementById('clearBtn');
+            if (input.value.trim() !== '') {
+                clearBtn.style.display = 'block';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+        });
+
+        // Logout confirmation
+        function confirmLogout(event) {
+            event.preventDefault(); // cegah langsung logout
+
+            Swal.fire({
+                title: 'Yakin mau logout?',
+                text: "Anda akan keluar dari sesi ini",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3B82F6',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Logout...',
+                        text: 'Sedang memproses',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        timer: 1200
+                    });
+
+                    // Redirect setelah delay kecil agar animasi muncul
+                    setTimeout(() => {
+                        window.location.href = "{{ url_for('logout') }}";
+                    }, 1200);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

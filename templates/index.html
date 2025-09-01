@@ -17,6 +17,7 @@
   <link href='https://cdn.boxicons.com/fonts/basic/boxicons.min.css' rel='stylesheet'>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="icon" href="{{ url_for('static', filename='assets/imgs/logo.ico') }}" type="image/x-icon"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
         /* Custom CSS untuk animasi hamburger ke X */
         .hamburger-line {
@@ -1141,7 +1142,7 @@
         <h2 class="text-3xl font-bold mb-12">What Our Clients Says</h2>
 
         <div class="mb-12">
-            <img src="{{ url_for('static', filename='assets/imgs/map-indonesia.png') }}" alt="Map of Indonesia" class="w-full rounded shadow">
+            <div id="map" class="w-full h-[500px] rounded shadow"></div>
         </div>
 
         <div class="max-w-7xl mx-auto">
@@ -1445,6 +1446,7 @@
   <!-- AOS Script & Hamburger Script -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="{{ url_for('static', filename='assets/js/lang.js') }}"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
     AOS.init();
 
@@ -1551,8 +1553,36 @@
                     closePopup(popup.id);
                 });
             }
-        });
+        });     
   </script>
+   <!-- Simpan data regions sebagai JSON murni -->
+    <script id="regions-data" type="application/json">
+    {{ regions|tojson|safe }}
+    </script>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // Inisialisasi peta (center Indonesia)
+        var map = L.map('map').setView([-2.5489, 118.0149], 5);
+
+        // Basemap OSM
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        // Ambil JSON murni dari script tag
+        var regions = JSON.parse(document.getElementById("regions-data").textContent);
+
+        // Tambahkan marker
+        regions.forEach(function(region) {
+            if (region.latitude && region.longitude) {
+                L.marker([region.latitude, region.longitude])
+                    .addTo(map)
+                    .bindPopup(`<b>${region.name}</b><br>${region.type}`);
+            }
+        });
+    });
+    </script>
 
 </body>
 </html>
